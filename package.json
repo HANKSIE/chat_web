@@ -3,12 +3,13 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host=127.0.0.1",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
     "@quasar/extras": "^1.14.0",
+    "axios": "^0.27.2",
     "laravel-echo": "^1.11.7",
     "pusher-js": "^7.1.1-beta",
     "quasar": "^2.7.1",
