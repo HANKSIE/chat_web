@@ -4,9 +4,9 @@
       <q-toolbar>
         <q-space />
         <q-chip icon="person">
-          <span>hank</span>
+          <span>{{ user.name }}</span>
         </q-chip>
-        <q-btn icon="logout" flat />
+        <q-btn icon="logout" flat @click="logout" />
       </q-toolbar>
     </q-header>
 
@@ -15,13 +15,18 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <q-page>
+        <router-view />
+      </q-page>
     </q-page-container>
   </q-layout>
 </template>
 <script lang="ts">
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
+import useAuthStore from "@/stores/auth";
+import api from "@/utils/api";
+import clearAuthAndRedirectToLogin from "@/utils/clearAuthAndRedirectToLogin";
 
 export default {
   setup() {
@@ -42,6 +47,13 @@ export default {
     echo.channel("public_channel").listen(".launch-broadcast", (e: any) => {
       console.log(e);
     });
+
+    const auth = useAuthStore();
+    const logout = () => api.logout().then(() => clearAuthAndRedirectToLogin());
+    return {
+      user: auth.user,
+      logout,
+    };
   },
 };
 </script>

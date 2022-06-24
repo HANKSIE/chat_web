@@ -1,25 +1,64 @@
 <template>
-  <div class="q-pa-md" style="max-width: 400px">
-    <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-      <q-input filled v-model="name" label="Email" />
+  <full-center>
+    <q-form @submit.prevent="login">
+      <q-card>
+        <q-card-section>
+          <div class="text-h4 text-center">登入</div>
+        </q-card-section>
 
-      <q-input filled type="number" v-model="age" label="Password" />
+        <q-card-section>
+          <q-input filled v-model="email" label="Email" type="email">
+            <template v-slot:prepend>
+              <q-icon name="email" />
+            </template>
+          </q-input>
+        </q-card-section>
+        <q-card-section>
+          <q-input filled v-model="password" label="Password" type="password">
+            <template v-slot:prepend>
+              <q-icon name="lock" />
+            </template>
+          </q-input>
+        </q-card-section>
 
-      <div>
-        <q-btn label="Submit" type="submit" color="primary" />
-        <q-btn
-          label="Reset"
-          type="reset"
-          color="primary"
-          flat
-          class="q-ml-sm"
-        />
-      </div>
+        <q-card-actions align="center">
+          <div class="col-3">
+            <q-btn
+              label="登入"
+              type="submit"
+              color="primary"
+              class="full-width"
+            />
+          </div>
+        </q-card-actions>
+        <q-separator class="q-mt-sm" />
+        <q-card-section class="row justify-center">
+          還沒註冊嗎?
+        </q-card-section>
+      </q-card>
     </q-form>
-  </div>
+  </full-center>
 </template>
 <script lang="ts">
+import { ref } from "@vue/reactivity";
+import api from "@/utils/api";
+import useAuthStore from "@/stores/auth";
+import router from "@/router";
 export default {
-  setup() {},
+  setup() {
+    const email = ref("kkuuccff@gmail.com"),
+      password = ref("kkuuccff");
+
+    const auth = useAuthStore();
+    return {
+      login: () =>
+        api.login(email.value, password.value).then((res) => {
+          auth.setUser(res.data.user);
+          router.push({ name: "chatroom" });
+        }),
+      email,
+      password,
+    };
+  },
 };
 </script>

@@ -1,17 +1,52 @@
 import Chatroom from "@/views/Chatroom.vue";
-import Dashboard from "@/views/Dashboard.vue";
+import Dashboard from "@/views/layouts/Dashboard.vue";
+import Login from "@/views/Login.vue";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import useAuthStore from "./stores/auth";
+import api from "./utils/api";
 const routes: RouteRecordRaw[] = [
+  {
+    path: "/login",
+    name: "login",
+    meta: {
+      redirectWhenAuth: true,
+    },
+    component: Login,
+  },
   {
     path: "/dashboard",
     component: Dashboard,
-    children: [{ path: "chatroom", component: Chatroom }],
+    meta: {
+      requireAuth: true,
+    },
+    children: [{ path: "chatroom", name: "chatroom", component: Chatroom }],
   },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+router.beforeEach(async (to, _, next) => {
+  const { requireAuth, redirectWhenAuth } = to.matched[0].meta;
+  const auth = useAuthStore();
+
+  if (auth.user === null) {
+    try {
+      const res = await api.loadUser();
+      const { user } = res.data;
+      auth.setUser(user);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  if (redirectWhenAuth && auth.user !== null) return next({ name: "chatroom" });
+
+  if (requireAuth && auth.user === null) return next({ name: "login" });
+
+  return next();
 });
 
 export default router;
