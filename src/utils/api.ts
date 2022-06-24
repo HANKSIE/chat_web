@@ -1,19 +1,22 @@
 import http from "@/utils/http";
 import { LoginResponse } from "@/types/responses/auth";
 import { AxiosResponse } from "axios";
-
+import endpoints from "@/config/endpoints";
+const { auth } = endpoints;
 const api = {
-  login(
-    email: string,
-    password: string
-  ): Promise<AxiosResponse<LoginResponse>> {
-    return http.post("login", { email, password });
-  },
-  logout(): Promise<AxiosResponse<void>> {
-    return http.post("logout");
-  },
-  loadUser(): Promise<AxiosResponse<LoginResponse>> {
-    return http.get("user");
+  auth: {
+    login(
+      email: string,
+      password: string
+    ): Promise<AxiosResponse<LoginResponse>> {
+      return http.post(auth.login, { email, password });
+    },
+    logout(): Promise<AxiosResponse<void>> {
+      return http.post(auth.logout);
+    },
+    loadUser(): Promise<AxiosResponse<LoginResponse>> {
+      return http.get(auth.user);
+    },
   },
 };
 

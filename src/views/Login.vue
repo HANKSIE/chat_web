@@ -52,7 +52,7 @@ export default {
     const auth = useAuthStore();
     return {
       login: () =>
-        api.login(email.value, password.value).then((res) => {
+        api.auth.login(email.value, password.value).then((res) => {
           auth.setUser(res.data.user);
           router.push({ name: "chatroom" });
         }),

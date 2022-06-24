@@ -34,7 +34,7 @@ router.beforeEach(async (to, _, next) => {
 
   if (auth.user === null) {
     try {
-      const res = await api.loadUser();
+      const res = await api.auth.loadUser();
       const { user } = res.data;
       auth.setUser(user);
     } catch (err) {

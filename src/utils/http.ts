@@ -1,31 +1,30 @@
+import endpoints from "@/config/endpoints";
+import httpConfig from "@/config/http";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import Cookie from "js-cookie";
 import clearAuthAndRedirectToLogin from "./clearAuthAndRedirectToLogin";
-const http = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL,
-  withCredentials: true,
-});
+const http = axios.create(httpConfig.requestConfig);
 
 http.interceptors.request.use(
   async (config: AxiosRequestConfig) => {
-    if (config.method !== "get" && Cookie.get("XSRF-TOKEN") === undefined)
-      await http.get("sanctum/csrf-cookie");
+    if (
+      config.method !== "get" &&
+      Cookie.get(httpConfig.csrfTokenName) === undefined
+    )
+      await http.get(endpoints.csrf);
     return config;
   },
   (err): Promise<never> => Promise.reject(err)
 );
-
-// 不須重定向網址, 避免get user => 401 => Login Page的循環
-const DontRedirectUrl = ["user"];
 
 http.interceptors.response.use(
   (response: AxiosResponse): AxiosResponse => response,
   (error: AxiosError): Promise<never> => {
     if (
       (error.response!.status === 401,
-      !DontRedirectUrl.includes(error.response!.config.url!))
+      !httpConfig.dontRedirects.includes(error.response!.config.url!))
     ) {
-      clearAuthAndRedirectToLogin();
+      httpConfig.unauthHandle();
     }
     return Promise.reject(error.response);
   }

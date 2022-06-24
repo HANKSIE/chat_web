@@ -49,7 +49,8 @@ export default {
     });
 
     const auth = useAuthStore();
-    const logout = () => api.logout().then(() => clearAuthAndRedirectToLogin());
+    const logout = () =>
+      api.auth.logout().then(() => clearAuthAndRedirectToLogin());
     return {
       user: auth.user,
       logout,
