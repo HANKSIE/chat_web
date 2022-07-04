@@ -46,8 +46,8 @@ import useAuthStore from "@/stores/auth";
 import router from "@/router";
 export default {
   setup() {
-    const email = ref("kkuuccff@gmail.com"),
-      password = ref("kkuuccff");
+    const email = ref("iamfaker@gmail.com"),
+      password = ref("iamfaker");
 
     const auth = useAuthStore();
     return {

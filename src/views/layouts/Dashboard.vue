@@ -22,32 +22,20 @@
   </q-layout>
 </template>
 <script lang="ts">
-import Echo from "laravel-echo";
-import Pusher from "pusher-js";
 import useAuthStore from "@/stores/auth";
 import api from "@/utils/api";
 import clearAuthAndRedirectToLogin from "@/utils/clearAuthAndRedirectToLogin";
+import createEcho from "@/utils/createEcho";
 
 export default {
-  setup() {
-    const { VITE_PUSHER_APP_KEY, VITE_PUSHER_HOST, VITE_PUSHER_PORT } =
-      import.meta.env;
-
-    const client = new Pusher(VITE_PUSHER_APP_KEY, {
-      wsHost: VITE_PUSHER_HOST,
-      wsPort: VITE_PUSHER_PORT,
-      forceTLS: false,
-      disableStats: true,
-      enabledTransports: ["ws", "wss"],
-    });
-    const echo = new Echo({
-      broadcaster: "pusher",
-      client,
-    });
-    echo.channel("public_channel").listen(".launch-broadcast", (e: any) => {
-      console.log(e);
-    });
-
+  async setup() {
+    const echo = createEcho();
+    const res = await api.socialite.group.loadAllIDs();
+    res.data.groups.forEach((id) =>
+      echo.join(`group.${id}`).listen(".message", (e: any) => {
+        console.log(e);
+      })
+    );
     const auth = useAuthStore();
     const logout = () =>
       api.auth.logout().then(() => clearAuthAndRedirectToLogin());
