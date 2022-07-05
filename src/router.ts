@@ -4,6 +4,7 @@ import Login from "@/views/Login.vue";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import useAuthStore from "./stores/auth";
 import api from "./utils/api";
+import EventManager from "./utils/eventManager";
 const routes: RouteRecordRaw[] = [
   {
     path: "/login",
@@ -36,6 +37,7 @@ router.beforeEach(async (to, _, next) => {
     try {
       const res = await api.auth.loadUser();
       const { user } = res.data;
+      if (user) EventManager.dispatch(EventManager.EventType.LOGIN);
       auth.setUser(user);
     } catch (err) {
       console.error(err);

@@ -1,6 +1,10 @@
 enum EventType {
   LOGIN,
   LOGOUT,
+  JOIN_GROUP,
+  RECEIVE_GROUP_MESSAGE,
+  MEMBER_JOIN_GROUP,
+  MEMBER_LEAVE_GROUP,
 }
 
 export default EventType;

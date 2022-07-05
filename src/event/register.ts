@@ -1,8 +1,9 @@
 import EventManager from "@/utils/eventManager";
 
 const registers = [
-  import("./listeners/logout"),
-  import("./listeners/echo/subscriptGroups"),
+  import("./listeners/clearAuthAndRedirectToLogin"),
+  import("./listeners/echo/joinGroups"),
+  import("./listeners/echo/leaveGroups"),
 ];
 
 export default async () => {
