@@ -2,7 +2,7 @@ import endpoints from "@/config/endpoints";
 import httpConfig from "@/config/http";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import Cookie from "js-cookie";
-import clearAuthAndRedirectToLogin from "./clearAuthAndRedirectToLogin";
+
 const http = axios.create(httpConfig.requestConfig);
 
 http.interceptors.request.use(

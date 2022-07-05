@@ -1,5 +1,5 @@
-import clearAuthAndRedirectToLogin from "@/utils/clearAuthAndRedirectToLogin";
 import env from "@/utils/env";
+import EventManager from "@/utils/eventManager";
 import endpoints from "./endpoints";
 
 export default {
@@ -10,5 +10,5 @@ export default {
   //Don't redirect when unauthentication
   dontRedirects: [endpoints.auth.user],
   csrfTokenName: "XSRF-TOKEN",
-  unauthHandle: clearAuthAndRedirectToLogin,
+  unauthHandle: () => EventManager.dispatch(EventManager.EventType.LOGOUT),
 };

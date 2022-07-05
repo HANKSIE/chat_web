@@ -44,6 +44,7 @@ import { ref } from "@vue/reactivity";
 import api from "@/utils/api";
 import useAuthStore from "@/stores/auth";
 import router from "@/router";
+import EventManager from "@/utils/eventManager";
 export default {
   setup() {
     const email = ref("iamfaker@gmail.com"),
@@ -55,6 +56,7 @@ export default {
         api.auth.login(email.value, password.value).then((res) => {
           auth.setUser(res.data.user);
           router.push({ name: "chatroom" });
+          EventManager.dispatch(EventManager.EventType.LOGIN);
         }),
       email,
       password,

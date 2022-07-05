@@ -1,5 +1,5 @@
 import http from "@/utils/http";
-import { LoginResponse } from "@/types/responses/auth";
+import { BroadcastAuthResponse, LoginResponse } from "@/types/responses/auth";
 import { AxiosResponse } from "axios";
 import endpoints from "@/config/endpoints";
 const { auth, socialite } = endpoints;
@@ -17,7 +17,10 @@ const api = {
     loadUser(): Promise<AxiosResponse<LoginResponse>> {
       return http.get(auth.user);
     },
-    broadcast(socketID: string, channelName: string) {
+    broadcast(
+      socketID: string,
+      channelName: string
+    ): Promise<AxiosResponse<BroadcastAuthResponse>> {
       return http.post(auth.broadcast, {
         socket_id: socketID,
         channel_name: channelName,

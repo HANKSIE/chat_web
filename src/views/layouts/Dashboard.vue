@@ -6,6 +6,9 @@
         <q-chip icon="person">
           <span>{{ user.name }}</span>
         </q-chip>
+        <q-btn icon="sms" flat>
+          <q-badge floating color="red" rounded>10</q-badge>
+        </q-btn>
         <q-btn icon="logout" flat @click="logout" />
       </q-toolbar>
     </q-header>
@@ -24,21 +27,14 @@
 <script lang="ts">
 import useAuthStore from "@/stores/auth";
 import api from "@/utils/api";
-import clearAuthAndRedirectToLogin from "@/utils/clearAuthAndRedirectToLogin";
-import createEcho from "@/utils/createEcho";
-
+import EventManager from "@/utils/eventManager";
 export default {
-  async setup() {
-    const echo = createEcho();
-    const res = await api.socialite.group.loadAllIDs();
-    res.data.groups.forEach((id) =>
-      echo.join(`group.${id}`).listen(".message", (e: any) => {
-        console.log(e);
-      })
-    );
+  setup() {
     const auth = useAuthStore();
     const logout = () =>
-      api.auth.logout().then(() => clearAuthAndRedirectToLogin());
+      api.auth
+        .logout()
+        .then(() => EventManager.dispatch(EventManager.EventType.LOGOUT));
     return {
       user: auth.user,
       logout,

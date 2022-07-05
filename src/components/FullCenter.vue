@@ -1,5 +1,5 @@
 <template>
-  <div class="row justify-center items-center" style="min-height: inherit">
+  <div class="row justify-center items-center full-height">
     <slot></slot>
   </div>
 </template>

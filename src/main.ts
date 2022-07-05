@@ -13,7 +13,10 @@ import { createPinia } from "pinia";
 
 import router from "./router";
 import FullCenter from "./components/FullCenter.vue";
+import eventRegister from "./event/register";
 
 const app = createApp(App);
 app.use(Quasar).use(router).use(createPinia()).mount("#app");
 app.component("full-center", FullCenter);
+
+eventRegister();
