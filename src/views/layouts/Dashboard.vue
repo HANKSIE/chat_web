@@ -3,9 +3,12 @@
     <q-header>
       <q-toolbar>
         <q-space />
-        <q-chip icon="person">
-          <span>{{ user.name }}</span>
-        </q-chip>
+        <div>
+          <q-avatar color="white"
+            ><img :src="user.avatar_url || defaultAvatar"
+          /></q-avatar>
+          {{ user.name }}
+        </div>
         <q-btn icon="sms" flat>
           <q-badge floating color="red" rounded>10</q-badge>
         </q-btn>
@@ -25,6 +28,7 @@
   </q-layout>
 </template>
 <script lang="ts">
+import defaultAvatar from "@/assets/default_avatar.png";
 import useAuthStore from "@/stores/auth";
 import api from "@/utils/api";
 import EventManager from "@/utils/eventManager";
@@ -38,6 +42,7 @@ export default {
     return {
       user: auth.user,
       logout,
+      defaultAvatar,
     };
   },
 };

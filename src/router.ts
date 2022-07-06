@@ -1,6 +1,8 @@
 import Chatroom from "@/views/Chatroom.vue";
 import Dashboard from "@/views/layouts/Dashboard.vue";
 import Login from "@/views/Login.vue";
+import Register from "@/views/Register.vue";
+import NotFound from "@/views/NotFound.vue";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import useAuthStore from "./stores/auth";
 import api from "./utils/api";
@@ -15,12 +17,30 @@ const routes: RouteRecordRaw[] = [
     component: Login,
   },
   {
+    path: "/register",
+    name: "register",
+    meta: {
+      redirectWhenAuth: true,
+    },
+    component: Register,
+  },
+  {
     path: "/dashboard",
     component: Dashboard,
     meta: {
       requireAuth: true,
     },
-    children: [{ path: "chatroom", name: "chatroom", component: Chatroom }],
+    children: [
+      { path: "chatroom", name: "chatroom", component: Chatroom },
+      {
+        path: "/:pathMatch(.*)*",
+        component: NotFound,
+      },
+    ],
+  },
+  {
+    path: "/:pathMatch(.*)",
+    component: NotFound,
   },
 ];
 

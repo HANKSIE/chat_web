@@ -5,6 +5,21 @@ import endpoints from "@/config/endpoints";
 const { auth, socialite } = endpoints;
 const api = {
   auth: {
+    register(
+      name: string,
+      avatar: File | null,
+      email: string,
+      password: string,
+      password_confirmation: string
+    ): Promise<AxiosResponse<LoginResponse>> {
+      const formData = new FormData();
+      formData.append("name", name);
+      if (avatar) formData.append("avatar", avatar);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("password_confirmation", password_confirmation);
+      return http.post(auth.register, formData);
+    },
     login(
       email: string,
       password: string

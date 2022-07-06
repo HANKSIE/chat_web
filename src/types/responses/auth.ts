@@ -1,10 +1,14 @@
 import User from "../user";
 
-export type LoginResponse = {
+type LoginResponse = {
   user: User;
 };
 
-export type BroadcastAuthResponse = {
+type RegisterResponse = LoginResponse;
+
+type BroadcastAuthResponse = {
   auth: string;
   channel_data: string;
 };
+
+export type { LoginResponse, RegisterResponse, BroadcastAuthResponse };

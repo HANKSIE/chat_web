@@ -7,21 +7,21 @@
         </q-card-section>
 
         <q-card-section>
-          <q-input filled v-model="email" label="Email" type="email">
+          <q-input filled v-model="email" label="信箱" type="email">
             <template v-slot:prepend>
               <q-icon name="email" />
             </template>
           </q-input>
         </q-card-section>
         <q-card-section>
-          <q-input filled v-model="password" label="Password" type="password">
+          <q-input filled v-model="password" label="密碼" type="password">
             <template v-slot:prepend>
               <q-icon name="lock" />
             </template>
           </q-input>
         </q-card-section>
 
-        <q-card-actions align="center">
+        <q-card-actions class="row justify-center">
           <div class="col-3">
             <q-btn
               label="登入"
@@ -42,22 +42,19 @@
 <script lang="ts">
 import { ref } from "@vue/reactivity";
 import api from "@/utils/api";
-import useAuthStore from "@/stores/auth";
-import router from "@/router";
 import EventManager from "@/utils/eventManager";
 export default {
   setup() {
     const email = ref("iamfaker@gmail.com"),
       password = ref("iamfaker");
 
-    const auth = useAuthStore();
     return {
       login: () =>
-        api.auth.login(email.value, password.value).then((res) => {
-          auth.setUser(res.data.user);
-          router.push({ name: "chatroom" });
-          EventManager.dispatch(EventManager.EventType.LOGIN);
-        }),
+        api.auth
+          .login(email.value, password.value)
+          .then((res) =>
+            EventManager.dispatch(EventManager.EventType.LOGIN, res.data.user)
+          ),
       email,
       password,
     };
