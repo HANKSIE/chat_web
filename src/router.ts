@@ -58,7 +58,7 @@ router.beforeEach(async (to, _, next) => {
       const res = await api.auth.loadUser();
       const { user } = res.data;
       if (user) EventManager.dispatch(EventManager.EventType.LOGIN);
-      auth.setUser(user);
+      auth.set(user);
     } catch (err) {
       console.error(err);
     }

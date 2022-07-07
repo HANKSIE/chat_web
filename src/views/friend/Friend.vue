@@ -1,33 +1,34 @@
 <template>
-  <search v-model="keyword" />
+  <search-input v-model="keyword" />
   <q-separator />
-  <q-list padding class="rounded-borders">
-    <q-item clickable v-ripple v-for="friend in friends" :key="friend">
-      <q-item-section avatar top>
-        <avatar size="40px" :name="friend.name" :src="friend.avatar_url" />
-      </q-item-section>
-      <q-item-section>
-        <q-item-label lines="1" class="ellipsis" style="max-width: 150px">{{
-          friend.name
-        }}</q-item-label>
-      </q-item-section>
-    </q-item>
-  </q-list>
+  <unit-list :units="friends"></unit-list>
 </template>
 
 <script lang="ts">
 import { ref } from "@vue/reactivity";
-import Search from "@/components/Search.vue";
-import Avatar from "@/components/avatar.vue";
+import UnitList from "@/components/UnitList.vue";
+import User from "@/types/user";
+import SearchInput from "@/components/SearchInput.vue";
+
 export default {
-  components: { Search, Avatar },
+  components: { UnitList, SearchInput },
   setup() {
-    const friends = ref([
-      { name: "jack", avatar_url: "https://cdn.quasar.dev/img/avatar1.jpg" },
-      { name: "曾你好", avatar_url: null },
-      { name: "abcdefghijklmnopqurstuvwxyz", avatar_url: null },
-    ]);
     const keyword = ref("");
+    const friends = ref<User[]>([
+      {
+        id: 2,
+        name: "jack",
+        avatar_url: "https://cdn.quasar.dev/img/avatar1.jpg",
+        email: "jack@gmail.com",
+      },
+      { id: 3, name: "陳先生", avatar_url: null, email: "chen@gmail.com" },
+      {
+        id: 4,
+        name: "abcdefghijklmnopqurstuvwxyz",
+        avatar_url: null,
+        email: "abc@gmail.com",
+      },
+    ]);
     return {
       friends,
       keyword,
@@ -35,3 +36,4 @@ export default {
   },
 };
 </script>
+@/components/SearchInput.vue

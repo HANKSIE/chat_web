@@ -32,7 +32,13 @@
           <q-space />
         </q-tabs>
         <div class="col-1 row justify-center">
-          <div><q-btn icon="logout" flat round @click="logout" /></div>
+          <div>
+            <q-btn icon="logout" flat round @click="logout"
+              ><q-tooltip anchor="center right" self="center left">
+                登出
+              </q-tooltip></q-btn
+            >
+          </div>
         </div>
       </div>
     </template>
@@ -46,9 +52,9 @@
         transition-prev="jump-up"
         transition-next="jump-up"
       >
-        <q-tab-panel name="friend"> <friend-index-page /> </q-tab-panel>
+        <q-tab-panel name="friend"> <friend-page /> </q-tab-panel>
         <q-tab-panel name="chat"> chat </q-tab-panel>
-        <q-tab-panel name="group"> group </q-tab-panel>
+        <q-tab-panel name="group"> <group-page /> </q-tab-panel>
         <q-tab-panel name="profile"><profile-page :user="user" /></q-tab-panel>
       </q-tab-panels>
     </template>
@@ -59,10 +65,11 @@ import useAuthStore from "@/stores/auth";
 import api from "@/utils/api";
 import EventManager from "@/utils/eventManager";
 import { ref } from "@vue/reactivity";
-import FriendIndexPage from "@/views/Friend/Index.vue";
+import FriendPage from "@/views/Friend/Index.vue";
 import ProfilePage from "@/views/Profile.vue";
+import GroupPage from "@/views/Group.vue";
 export default {
-  components: { ProfilePage, FriendIndexPage },
+  components: { ProfilePage, FriendPage, GroupPage },
   setup() {
     const auth = useAuthStore();
     const logout = () =>

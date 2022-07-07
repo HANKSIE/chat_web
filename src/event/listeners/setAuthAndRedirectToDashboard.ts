@@ -8,7 +8,7 @@ const register: EventRegister = {
   event: EventType.LOGIN,
   handle: (user: User) => {
     const auth = useAuthStore();
-    auth.setUser(user);
+    auth.set(user);
     router.push({ name: "chatroom" });
   },
 };

@@ -7,7 +7,7 @@ const register: EventRegister = {
   event: EventType.LOGOUT,
   handle: () => {
     const auth = useAuthStore();
-    auth.removeUser();
+    auth.$reset();
     router.push({ name: "login" });
   },
 };
