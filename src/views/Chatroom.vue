@@ -1,5 +1,13 @@
 <template>
-  <div class="scroll" style="height: calc(71vh - 50px)">
+  <q-toolbar class="bg-primary">
+    <q-chip>
+      <Avatar :name="'friend'" />
+      <span class="q-ml-sm ellipsis" style="max-width: 500px"
+        >friend</span
+      ></q-chip
+    >
+  </q-toolbar>
+  <q-scroll-area style="height: calc(71vh - 50px)" class="q-px-md">
     <template v-for="index in 20" :key="index">
       <q-chat-message
         :id="`m${index}`"
@@ -9,7 +17,7 @@
         sent
       />
     </template>
-  </div>
+  </q-scroll-area>
   <q-editor
     square
     height="calc(30vh - 50px)"
@@ -29,3 +37,10 @@
     :toolbar="[['image', 'upload']]"
   />
 </template>
+<script lang="ts">
+import Avatar from "@/components/Avatar.vue";
+export default {
+  components: { Avatar },
+  setup() {},
+};
+</script>

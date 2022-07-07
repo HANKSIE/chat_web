@@ -1,6 +1,7 @@
 <template>
-  <img
+  <q-img
     :src="imageUrl.length === 0 ? defaultImage : imageUrl"
+    spinner-color="white"
     @click="openFileChooser"
   />
   <input

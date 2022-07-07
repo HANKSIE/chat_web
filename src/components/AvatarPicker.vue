@@ -1,5 +1,5 @@
 <template>
-  <q-avatar color="white">
+  <q-avatar color="grey">
     <image-picker
       :defaultImage="defaultAvatar"
       :modelValue="modelValue"
