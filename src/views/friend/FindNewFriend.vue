@@ -1,7 +1,11 @@
 <template>
   <search-input v-model="keyword" />
   <q-separator />
-  <unit-list :units="users"></unit-list>
+  <unit-list :units="users">
+    <template #list-item-side>
+      <q-btn flat icon="person_add_alt" />
+    </template>
+  </unit-list>
 </template>
 
 <script lang="ts">

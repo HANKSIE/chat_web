@@ -2,12 +2,14 @@
   <q-tabs v-model="tab" dense>
     <q-tab name="friend" label="好友" />
     <q-tab name="find" label="尋找" />
+    <q-tab name="request" label="邀請" />
   </q-tabs>
   <q-tab-panels v-model="tab" animated>
     <q-tab-panel name="friend">
       <friend />
     </q-tab-panel>
     <q-tab-panel name="find"> <find-new-friend /> </q-tab-panel>
+    <q-tab-panel name="request"> <friend-request /> </q-tab-panel>
   </q-tab-panels>
 </template>
 
@@ -15,8 +17,9 @@
 import { ref } from "@vue/reactivity";
 import Friend from "./Friend.vue";
 import FindNewFriend from "./FindNewFriend.vue";
+import FriendRequest from "./FriendRequest.vue";
 export default {
-  components: { Friend, FindNewFriend },
+  components: { Friend, FindNewFriend, FriendRequest },
   setup: () => ({ tab: ref("friend") }),
 };
 </script>
