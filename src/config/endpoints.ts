@@ -8,6 +8,11 @@ export default {
   },
   csrf: "sanctum/csrf-cookie",
   socialite: {
-    group: "groups",
+    group: {
+      allIDs: "groups",
+    },
+    friend: {
+      simplePaginate: "friend/search",
+    },
   },
 };

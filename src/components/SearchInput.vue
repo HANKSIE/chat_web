@@ -5,7 +5,7 @@
     placeholder="搜尋"
   >
     <template v-slot:prepend>
-      <q-icon name="search" />
+      <q-icon name="search" class="cursor-pointer" @click="search" />
     </template>
     <template v-slot:append>
       <q-icon
@@ -19,6 +19,6 @@
 </template>
 <script lang="ts">
 export default {
-  props: ["modelValue"],
+  props: ["modelValue", "search"],
 };
 </script>

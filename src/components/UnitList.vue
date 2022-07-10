@@ -20,6 +20,7 @@
       </slot>
     </q-item>
   </q-list>
+
   <q-dialog v-model="show">
     <slot name="dialog">
       <q-card flat v-if="unitSelected" style="width: 350px">
@@ -46,7 +47,7 @@
 
 <script lang="ts">
 import { ref } from "@vue/reactivity";
-import Avatar from "@/components/avatar.vue";
+import Avatar from "@/components/Avatar.vue";
 import { PropType } from "@vue/runtime-core";
 
 interface Unit {

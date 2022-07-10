@@ -2,7 +2,17 @@ import http from "@/utils/http";
 import { BroadcastAuthResponse, LoginResponse } from "@/types/responses/auth";
 import { AxiosResponse } from "axios";
 import endpoints from "@/config/endpoints";
+import SimplePaginate from "@/types/simplePaginate";
 const { auth, socialite } = endpoints;
+
+const simplePaginate =
+  <T>(url: string) =>
+  (
+    perPage: number,
+    keyword: string
+  ): Promise<AxiosResponse<SimplePaginate<T>>> =>
+    http.get(`${url}/${perPage}/${keyword}`);
+
 const api = {
   auth: {
     register(
@@ -49,7 +59,21 @@ const api = {
           groups: number[];
         }>
       > {
-        return http.get(socialite.group);
+        return http.get(socialite.group.allIDs);
+      },
+    },
+  },
+  common: {
+    simplePaginate: {
+      init<T>(
+        url: string,
+        perPage = 5,
+        keyword = ""
+      ): Promise<AxiosResponse<SimplePaginate<T>>> {
+        return simplePaginate<T>(url)(perPage, keyword);
+      },
+      page<T>(pageUrl: string): Promise<AxiosResponse<SimplePaginate<T>>> {
+        return http.get(pageUrl);
       },
     },
   },

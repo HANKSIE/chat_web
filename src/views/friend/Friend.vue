@@ -1,39 +1,36 @@
 <template>
-  <search-input v-model="keyword" />
+  <search-input v-model="keyword" :search="searchFriend" />
   <q-separator />
-  <unit-list :units="friends"></unit-list>
+  <q-scroll-area style="height: 70vh" class="q-mt-sm">
+    <unit-list :units="data"></unit-list>
+  </q-scroll-area>
+  <q-btn label="next" @click="next" />
 </template>
 
 <script lang="ts">
 import { ref } from "@vue/reactivity";
 import UnitList from "@/components/UnitList.vue";
-import User from "@/types/user";
 import SearchInput from "@/components/SearchInput.vue";
+import useSimplePaginate from "@/compositions/useSimplePaginate";
+import endpoints from "@/config/endpoints";
 
 export default {
   components: { UnitList, SearchInput },
   setup() {
     const keyword = ref("");
-    const friends = ref<User[]>([
-      {
-        id: 2,
-        name: "jack",
-        avatar_url: "https://cdn.quasar.dev/img/avatar1.jpg",
-        email: "jack@gmail.com",
-      },
-      { id: 3, name: "陳先生", avatar_url: null, email: "chen@gmail.com" },
-      {
-        id: 4,
-        name: "abcdefghijklmnopqurstuvwxyz",
-        avatar_url: null,
-        email: "abc@gmail.com",
-      },
-    ]);
+    const { data, search, next } = useSimplePaginate(
+      endpoints.socialite.friend.simplePaginate,
+      5
+    );
+
+    const searchFriend = () => search(keyword.value);
+    searchFriend();
     return {
-      friends,
       keyword,
+      data,
+      next,
+      searchFriend,
     };
   },
 };
 </script>
-@/components/SearchInput.vue

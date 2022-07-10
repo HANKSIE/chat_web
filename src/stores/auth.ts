@@ -7,12 +7,13 @@ interface State {
 
 const useAuthStore = defineStore("auth", {
   state: (): State => ({
-    user: {
-      id: 1,
-      name: "kevin",
-      avatar_url: null,
-      email: "kevin@gmail.com",
-    },
+    // user: {
+    //   id: 1,
+    //   name: "kevin",
+    //   avatar_url: null,
+    //   email: "kevin@gmail.com",
+    // },
+    user: null,
   }),
   actions: {
     set(user: User) {
