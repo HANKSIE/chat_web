@@ -19,11 +19,6 @@
               好友
             </q-tooltip></q-tab
           >
-          <q-tab name="chat" icon="chat">
-            <q-tooltip anchor="center right" self="center left">
-              聊天
-            </q-tooltip></q-tab
-          >
           <q-tab name="group" icon="group">
             <q-tooltip anchor="center right" self="center left">
               群組
@@ -53,7 +48,6 @@
         transition-next="jump-up"
       >
         <q-tab-panel name="friend"> <friend-page /> </q-tab-panel>
-        <q-tab-panel name="chat"> chat </q-tab-panel>
         <q-tab-panel name="group"> <group-page /> </q-tab-panel>
         <q-tab-panel name="profile"><profile-page :user="user" /></q-tab-panel>
       </q-tab-panels>

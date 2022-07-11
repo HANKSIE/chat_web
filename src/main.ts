@@ -1,6 +1,6 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-import { Quasar } from "quasar";
+import { Dialog, Quasar } from "quasar";
 
 // Import icon libraries
 import "@quasar/extras/material-icons/material-icons.css";
@@ -16,7 +16,12 @@ import FullCenter from "./components/FullCenter.vue";
 import eventRegister from "./event/register";
 
 const app = createApp(App);
-app.use(Quasar).use(router).use(createPinia()).mount("#app");
+
+app
+  .use(Quasar, { plugins: { Dialog } })
+  .use(router)
+  .use(createPinia())
+  .mount("#app");
 app.component("full-center", FullCenter);
 
 eventRegister();
