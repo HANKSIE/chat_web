@@ -23,7 +23,7 @@
         </q-item-section>
         <q-item-section side top>
           <q-item-label caption v-if="unit.latest_message">
-            {{ convertTime(unit.latest_message.created_at) }}
+            {{ unit.latest_message.created_at }}
           </q-item-label>
           <slot name="list-item-side" :unit="unit"></slot>
         </q-item-section>
@@ -38,7 +38,7 @@ import { PropType } from "@vue/runtime-core";
 import { useQuasar } from "quasar";
 import UnitProfile from "./UnitProfile.vue";
 import { Unit } from "@/types/components/unitlist";
-import moment from "moment";
+import useChatroomStore from "@/stores/chatroom";
 
 export default {
   props: {
@@ -57,16 +57,12 @@ export default {
       });
     };
 
-    const switchChatroom = (unit: Unit) => {
-      console.log("switch chatroom");
-    };
-
-    const convertTime = (str: string) => moment(str).format("MMMM Do, h:mm");
+    const chatRoomStore = useChatroomStore();
+    const switchChatroom = (unit: Unit) => chatRoomStore.init(unit);
 
     return {
       showProfile,
       switchChatroom,
-      convertTime,
     };
   },
 };

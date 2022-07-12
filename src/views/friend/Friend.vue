@@ -5,7 +5,7 @@
     <unit-list :units="units"></unit-list>
   </q-scroll-area>
   <div class="row justify-center">
-    <q-btn label="加載更多" color="primary" @click="next" />
+    <q-btn label="加載更多" color="primary" @click="load" />
   </div>
 </template>
 
@@ -23,16 +23,18 @@ export default {
   components: { UnitList, SearchInput },
   setup() {
     const keyword = ref("");
-    const { data, search, next } = useSimplePaginate<FriendSimplePaginateData>(
-      endpoints.socialite.friend.simplePaginate,
-      5
+    const friends = ref<FriendSimplePaginateData[]>([]);
+    const { search, next } = useSimplePaginate<FriendSimplePaginateData>(
+      endpoints.socialite.friend.simplePaginate
     );
 
-    const searchFriend = () => search(keyword.value);
+    const searchFriend = async () => friends.value.push(...(await search(5)));
+    const load = async () => friends.value.push(...(await next()));
+
     searchFriend();
 
     const units = computed<Unit[]>(() =>
-      data.value.map((val) => {
+      friends.value.map((val) => {
         const { id, name, avatar_url } = val.user;
         return {
           id,
@@ -47,7 +49,7 @@ export default {
     return {
       keyword,
       units,
-      next,
+      load,
       searchFriend,
     };
   },

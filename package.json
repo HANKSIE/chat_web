@@ -14,7 +14,6 @@
     "eventemitter3": "^4.0.7",
     "js-cookie": "^3.0.1",
     "laravel-echo": "^1.11.7",
-    "moment": "^2.29.4",
     "pinia": "^2.0.14",
     "pusher-js": "^7.1.1-beta",
     "quasar": "^2.7.1",

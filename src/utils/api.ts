@@ -3,15 +3,13 @@ import { BroadcastAuthResponse, LoginResponse } from "@/types/responses/auth";
 import { AxiosResponse } from "axios";
 import endpoints from "@/config/endpoints";
 import SimplePaginate from "@/types/simplePaginate";
+import Message from "@/types/message";
 const { auth, socialite } = endpoints;
 
 const simplePaginate =
   <T>(url: string) =>
-  (
-    perPage: number,
-    keyword: string
-  ): Promise<AxiosResponse<SimplePaginate<T>>> =>
-    http.get(`${url}/${perPage}/${keyword}`);
+  (...args: any[]): Promise<AxiosResponse<SimplePaginate<T>>> =>
+    http.get(`${url}/${args.join("/")}`);
 
 const api = {
   auth: {
@@ -61,16 +59,30 @@ const api = {
       > {
         return http.get(socialite.group.allIDs);
       },
+      message: {
+        send(
+          group_id: number,
+          body: string
+        ): Promise<
+          AxiosResponse<{
+            message: Message | null;
+          }>
+        > {
+          return http.post(socialite.group.message.restApi, {
+            group_id,
+            body,
+          });
+        },
+      },
     },
   },
   common: {
     simplePaginate: {
       init<T>(
         url: string,
-        perPage = 5,
-        keyword = ""
+        ...args: any[]
       ): Promise<AxiosResponse<SimplePaginate<T>>> {
-        return simplePaginate<T>(url)(perPage, keyword);
+        return simplePaginate<T>(url)(...args);
       },
       page<T>(pageUrl: string): Promise<AxiosResponse<SimplePaginate<T>>> {
         return http.get(pageUrl);

@@ -10,9 +10,13 @@ export default {
   socialite: {
     group: {
       allIDs: "groups",
+      message: {
+        simplePaginate: "messages/search",
+        restApi: "messages",
+      },
     },
     friend: {
-      simplePaginate: "friend/search",
+      simplePaginate: "friends/search",
     },
   },
 };

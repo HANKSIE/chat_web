@@ -1,46 +1,75 @@
 <template>
   <q-toolbar class="bg-primary">
-    <q-chip>
-      <Avatar :name="'friend'" />
-      <span class="q-ml-sm ellipsis" style="max-width: 500px"
-        >friend</span
-      ></q-chip
-    >
-  </q-toolbar>
-  <q-scroll-area style="height: calc(71vh - 50px)" class="q-px-md">
-    <template v-for="index in 20" :key="index">
-      <q-chat-message
-        :id="`m${index}`"
-        name="someone"
-        avatar="https://cdn.quasar.dev/img/avatar1.jpg"
-        :text="['hey, how are you?']"
-        sent
+    <q-chip v-if="chatroomStore.unit">
+      <Avatar
+        :name="chatroomStore.unit.name"
+        :src="chatroomStore.unit.avatar_url"
       />
-    </template>
-  </q-scroll-area>
-  <q-editor
-    square
-    height="calc(30vh - 50px)"
-    modelValue=""
-    :definitions="{
-      image: {
-        tip: '圖片上傳',
-        icon: 'image',
-        handler: () => {},
-      },
-      upload: {
-        tip: '檔案上傳',
-        icon: 'attach_file',
-        handler: () => {},
-      },
-    }"
-    :toolbar="[['image', 'upload']]"
-  />
+      <span class="q-ml-sm ellipsis" style="max-width: 500px">
+        {{ chatroomStore.unit.name }}
+      </span>
+    </q-chip>
+  </q-toolbar>
+  <template v-if="chatroomStore.unit === null">
+    <div style="height: calc(100vh - 50px)" class="flex flex-center text-h5">
+      開始聊天吧
+    </div>
+  </template>
+  <div v-else style="height: calc(100vh - 50px)" class="column">
+    <q-scroll-area class="q-px-md col-10">
+      <template v-for="message in chatroomStore.messages" :key="message.id">
+        <q-chat-message
+          :name="message.user.name"
+          :text="[message.body]"
+          :sent="message.user.id !== auth.user.id"
+        >
+          <template #avatar>
+            <avatar
+              class="q-mx-sm"
+              size="45px"
+              :name="message.user.name"
+              :src="message.user.avatar_url"
+            />
+          </template>
+        </q-chat-message>
+      </template>
+    </q-scroll-area>
+    <div class="row col flex-center">
+      <q-input filled class="col-8" v-model="text" placeholder="寫些甚麼吧" />
+      <q-btn
+        class="q-ml-md col-1 bg-primary"
+        icon="send"
+        @click="sendMessage"
+      />
+    </div>
+  </div>
 </template>
 <script lang="ts">
 import Avatar from "@/components/Avatar.vue";
+import useAuthStore from "@/stores/auth";
+import useChatroomStore from "@/stores/chatroom";
+import { ref } from "@vue/reactivity";
+import api from "@/utils/api";
 export default {
   components: { Avatar },
-  setup() {},
+  setup() {
+    const chatroomStore = useChatroomStore();
+    const auth = useAuthStore();
+    const text = ref("");
+    const sendMessage = async () => {
+      const res = await api.socialite.group.message.send(
+        chatroomStore.unit!.group_id,
+        text.value
+      );
+
+      if (res.data.message) chatroomStore.pushMessage(res.data.message);
+    };
+    return {
+      chatroomStore,
+      auth,
+      text,
+      sendMessage,
+    };
+  },
 };
 </script>
