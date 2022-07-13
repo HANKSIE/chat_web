@@ -23,10 +23,6 @@ const useChatroomStore = defineStore("chatroom", {
     async init(unit: Unit) {
       this.messages = [];
       this.unit = unit;
-      this.unshiftMessage(...(await this.simplePaginate.search(unit.group_id)));
-    },
-    loadTop() {
-      return this.simplePaginate.next();
     },
     pushMessage(...messages: Message[]) {
       this.messages.push(...messages.slice().reverse());

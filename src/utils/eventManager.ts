@@ -10,6 +10,9 @@ class EventManager {
   static on(type: EventType, listener: (...args: any[]) => void) {
     return EventManager._emitter.on(type.toString(), listener);
   }
+  static removeAllListener() {
+    EventManager._emitter.removeAllListeners();
+  }
 }
 
 export default EventManager;

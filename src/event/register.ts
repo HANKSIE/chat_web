@@ -1,8 +1,9 @@
 import EventManager from "@/utils/eventManager";
 
 const registers = [
+  import("./listeners/removeAllListenerAndRegisterAgain"),
   import("./listeners/setAuthAndRedirectToDashboard"),
-  import("./listeners/clearAuthAndRedirectToLogin"),
+  import("./listeners/clearStoreAndRedirectToLogin"),
   import("./listeners/echo/joinGroups"),
   import("./listeners/echo/leaveGroups"),
 ];

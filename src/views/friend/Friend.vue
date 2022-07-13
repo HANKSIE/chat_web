@@ -28,7 +28,10 @@ export default {
       endpoints.socialite.friend.simplePaginate
     );
 
-    const searchFriend = async () => friends.value.push(...(await search(5)));
+    const searchFriend = async () => {
+      friends.value = [];
+      friends.value.push(...(await search(5, keyword.value)));
+    };
     const load = async () => friends.value.push(...(await next()));
 
     searchFriend();

@@ -16,9 +16,16 @@
     </div>
   </template>
   <div v-else style="height: calc(100vh - 50px)" class="column">
-    <q-scroll-area class="q-px-md col-10">
-      <template v-for="message in chatroomStore.messages" :key="message.id">
+    <q-scroll-area ref="scrollArea" class="q-px-md col-10">
+      <q-infinite-scroll @load="loadTop" :offset="50" reverse>
+        <template v-slot:loading>
+          <div class="row justify-center q-my-md">
+            <q-spinner color="primary" name="dots" size="40px" />
+          </div>
+        </template>
         <q-chat-message
+          v-for="message in chatroomStore.messages"
+          :key="message.id"
           :name="message.user.name"
           :text="[message.body]"
           :sent="message.user.id !== auth.user.id"
@@ -32,7 +39,7 @@
             />
           </template>
         </q-chat-message>
-      </template>
+      </q-infinite-scroll>
     </q-scroll-area>
     <div class="row col flex-center">
       <q-input filled class="col-8" v-model="text" placeholder="寫些甚麼吧" />
@@ -50,25 +57,51 @@ import useAuthStore from "@/stores/auth";
 import useChatroomStore from "@/stores/chatroom";
 import { ref } from "@vue/reactivity";
 import api from "@/utils/api";
+import EventManager from "@/utils/eventManager";
+import Message from "@/types/message";
+import { QScrollArea } from "quasar";
+import { nextTick } from "vue";
+
 export default {
   components: { Avatar },
   setup() {
     const chatroomStore = useChatroomStore();
     const auth = useAuthStore();
     const text = ref("");
-    const sendMessage = async () => {
-      const res = await api.socialite.group.message.send(
+    const scrollArea = ref<QScrollArea>();
+    EventManager.on(
+      EventManager.EventType.RECEIVE_GROUP_MESSAGE,
+      // scroll down
+      (message: Message) => {
+        if (chatroomStore.unit?.group_id !== message.group_id) return;
+        chatroomStore.pushMessage(message);
+        nextTick(() =>
+          scrollArea.value?.setScrollPosition(
+            "vertical",
+            scrollArea.value.getScrollTarget().scrollHeight
+          )
+        );
+      }
+    );
+    const loadTop = async (_: number, done: (val: boolean) => void) => {
+      const messages = await (chatroomStore.messages.length === 0
+        ? chatroomStore.simplePaginate.search(chatroomStore.unit?.group_id)
+        : chatroomStore.simplePaginate.next());
+      chatroomStore.unshiftMessage(...messages);
+      done(messages.length === 0);
+    };
+    const sendMessage = () =>
+      api.socialite.group.message.send(
         chatroomStore.unit!.group_id,
         text.value
       );
-
-      if (res.data.message) chatroomStore.pushMessage(res.data.message);
-    };
     return {
       chatroomStore,
       auth,
       text,
       sendMessage,
+      scrollArea,
+      loadTop,
     };
   },
 };
