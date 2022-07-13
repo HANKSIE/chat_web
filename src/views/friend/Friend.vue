@@ -2,11 +2,15 @@
   <search-input v-model="keyword" :search="searchFriend" />
   <q-separator />
   <q-scroll-area style="height: 70vh" class="q-mt-sm">
-    <unit-list :units="units"></unit-list>
+    <q-infinite-scroll ref="infiniteScroll" @load="load" :offset="50">
+      <unit-list :units="units"></unit-list>
+      <template v-slot:loading>
+        <div class="row justify-center q-my-md">
+          <q-spinner-dots color="primary" size="40px" />
+        </div>
+      </template>
+    </q-infinite-scroll>
   </q-scroll-area>
-  <div class="row justify-center">
-    <q-btn label="加載更多" color="primary" @click="load" />
-  </div>
 </template>
 
 <script lang="ts">
@@ -18,6 +22,7 @@ import endpoints from "@/config/endpoints";
 import { computed } from "@vue/runtime-core";
 import { Unit } from "@/types/components/unitlist";
 import FriendSimplePaginateData from "@/types/friendSimplePaginateData";
+import { QInfiniteScroll } from "quasar";
 
 export default {
   components: { UnitList, SearchInput },
@@ -27,12 +32,18 @@ export default {
     const { search, next } = useSimplePaginate<FriendSimplePaginateData>(
       endpoints.socialite.friend.simplePaginate
     );
-
-    const searchFriend = async () => {
+    const infiniteScroll = ref<QInfiniteScroll | null>(null);
+    const searchFriend = () => {
       friends.value = [];
-      friends.value.push(...(await search(5, keyword.value)));
+      infiniteScroll.value?.resume();
     };
-    const load = async () => friends.value.push(...(await next()));
+    const load = async (_: number, done: (val: boolean) => void) => {
+      const data = await (friends.value.length === 0
+        ? search(10, keyword.value)
+        : next());
+      friends.value.push(...data);
+      done(data.length === 0);
+    };
 
     searchFriend();
 
@@ -54,6 +65,7 @@ export default {
       units,
       load,
       searchFriend,
+      infiniteScroll,
     };
   },
 };

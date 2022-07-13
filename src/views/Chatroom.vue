@@ -85,7 +85,7 @@ export default {
     );
     const loadTop = async (_: number, done: (val: boolean) => void) => {
       const messages = await (chatroomStore.messages.length === 0
-        ? chatroomStore.simplePaginate.search(chatroomStore.unit?.group_id)
+        ? chatroomStore.simplePaginate.search(chatroomStore.unit?.group_id, 10)
         : chatroomStore.simplePaginate.next());
       chatroomStore.unshiftMessage(...messages);
       done(messages.length === 0);
