@@ -1,16 +1,23 @@
 <template>
   <search-input v-model="keyword" :search="searchFriend" />
   <q-separator />
-  <q-scroll-area style="height: 70vh" class="q-mt-sm">
-    <q-infinite-scroll ref="infiniteScroll" @load="load" :offset="50">
-      <unit-list :units="units"></unit-list>
-      <template v-slot:loading>
-        <div class="row justify-center q-my-md">
-          <q-spinner-dots color="primary" size="40px" />
-        </div>
-      </template>
-    </q-infinite-scroll>
-  </q-scroll-area>
+  <template v-if="isSearchAtLeastOnce && units.length === 0">
+    <div class="q-mt-md text-h6 text-weight-bold row justify-center">
+      沒有搜尋結果
+    </div>
+  </template>
+  <template v-else>
+    <q-scroll-area style="height: 70vh" class="q-mt-sm">
+      <q-infinite-scroll ref="infiniteScroll" @load="load" :offset="50">
+        <unit-list :units="units"></unit-list>
+        <template v-slot:loading>
+          <div class="row justify-center q-my-md">
+            <q-spinner-dots color="primary" size="40px" />
+          </div>
+        </template>
+      </q-infinite-scroll>
+    </q-scroll-area>
+  </template>
 </template>
 
 <script lang="ts">
@@ -34,7 +41,9 @@ export default {
     );
 
     const infiniteScroll = ref<QInfiniteScroll | null>(null);
+    const isSearchAtLeastOnce = ref(false);
     const searchFriend = () => {
+      isSearchAtLeastOnce.value = false;
       friends.value = [];
       infiniteScroll.value?.resume();
     };
@@ -44,6 +53,7 @@ export default {
         : simplePaginate.next());
       friends.value.push(...data);
       done(data.length === 0);
+      isSearchAtLeastOnce.value = true;
     };
 
     searchFriend();
@@ -67,6 +77,7 @@ export default {
       load,
       searchFriend,
       infiniteScroll,
+      isSearchAtLeastOnce,
     };
   },
 };
