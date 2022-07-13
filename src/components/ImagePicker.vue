@@ -13,12 +13,15 @@
   />
 </template>
 <script lang="ts">
-import useImagePreview from "@/compositions/useImagePreview";
 import { ref } from "@vue/reactivity";
+import { computed } from "@vue/runtime-core";
 export default {
   props: ["defaultImage", "modelValue"],
   setup(_, { emit }) {
-    const { image, imageUrl } = useImagePreview();
+    const image = ref<File | null>(null);
+    const imageUrl = computed<string>(() =>
+      image.value ? URL.createObjectURL(image.value) : ""
+    );
     const fileChooser = ref<HTMLInputElement | null>();
     const openFileChooser = () => {
       fileChooser.value?.click();

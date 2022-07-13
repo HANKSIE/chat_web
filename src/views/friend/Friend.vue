@@ -17,21 +17,22 @@
 import { ref } from "@vue/reactivity";
 import UnitList from "@/components/UnitList.vue";
 import SearchInput from "@/components/SearchInput.vue";
-import useSimplePaginate from "@/compositions/useSimplePaginate";
 import endpoints from "@/config/endpoints";
 import { computed } from "@vue/runtime-core";
 import { Unit } from "@/types/components/unitlist";
 import FriendSimplePaginateData from "@/types/friendSimplePaginateData";
 import { QInfiniteScroll } from "quasar";
-
+import SimplePaginate from "@/utils/simplePaginate";
 export default {
   components: { UnitList, SearchInput },
   setup() {
     const keyword = ref("");
     const friends = ref<FriendSimplePaginateData[]>([]);
-    const { search, next } = useSimplePaginate<FriendSimplePaginateData>(
+
+    const simplePaginate = new SimplePaginate<FriendSimplePaginateData>(
       endpoints.socialite.friend.simplePaginate
     );
+
     const infiniteScroll = ref<QInfiniteScroll | null>(null);
     const searchFriend = () => {
       friends.value = [];
@@ -39,8 +40,8 @@ export default {
     };
     const load = async (_: number, done: (val: boolean) => void) => {
       const data = await (friends.value.length === 0
-        ? search(10, keyword.value)
-        : next());
+        ? simplePaginate.search(10, keyword.value)
+        : simplePaginate.next());
       friends.value.push(...data);
       done(data.length === 0);
     };

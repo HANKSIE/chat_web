@@ -1,10 +1,8 @@
 import { defineStore } from "pinia";
 import Message from "@/types/message";
 import endpoints from "@/config/endpoints";
-import useSimplePaginate, {
-  SimplePaginate,
-} from "@/compositions/useSimplePaginate";
 import { Unit } from "@/types/components/unitlist";
+import SimplePaginate from "@/utils/simplePaginate";
 interface State {
   unit: Unit | null;
   simplePaginate: SimplePaginate<Message>;
@@ -14,13 +12,13 @@ interface State {
 const useChatroomStore = defineStore("chatroom", {
   state: (): State => ({
     unit: null,
-    simplePaginate: useSimplePaginate<Message>(
+    simplePaginate: new SimplePaginate<Message>(
       endpoints.socialite.group.message.simplePaginate
     ),
     messages: [],
   }),
   actions: {
-    async init(unit: Unit) {
+    init(unit: Unit) {
       this.messages = [];
       this.unit = unit;
     },
