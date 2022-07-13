@@ -90,11 +90,25 @@ export default {
       chatroomStore.unshiftMessage(...messages);
       done(messages.length === 0);
     };
-    const sendMessage = () =>
-      api.socialite.group.message.send(
+    const sendMessage = async () => {
+      const res = await api.socialite.group.message.send(
         chatroomStore.unit!.group_id,
         text.value
       );
+
+      const message = res.data.message;
+      if (message) {
+        chatroomStore.pushMessage(message);
+        text.value = "";
+        nextTick(() =>
+          scrollArea.value?.setScrollPosition(
+            "vertical",
+            scrollArea.value.getScrollTarget().scrollHeight
+          )
+        );
+      }
+    };
+
     return {
       chatroomStore,
       auth,

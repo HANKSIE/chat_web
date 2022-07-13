@@ -8,7 +8,7 @@ import EventManager from "@/utils/eventManager";
 const register: EventRegister = {
   event: EventType.LOGIN,
   handle: () => {
-    const echo = EchoManager.rebuild();
+    const echo = EchoManager.connect();
     api.socialite.group.loadAllIDs().then((res) => {
       res.data.groups.forEach((id) =>
         echo

@@ -5,7 +5,7 @@ import Pusher from "pusher-js";
 class EchoManager {
   public static echo: Echo | null;
 
-  static rebuild() {
+  static connect() {
     EchoManager.echo = new Echo({
       broadcaster: "pusher",
       client: new Pusher(config.appKey, config.options),

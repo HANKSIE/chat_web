@@ -12,6 +12,8 @@ http.interceptors.request.use(
       Cookie.get(httpConfig.csrfTokenName) === undefined
     )
       await http.get(endpoints.csrf);
+
+    httpConfig.interceptors.request(config);
     return config;
   },
   (err): Promise<never> => Promise.reject(err)
