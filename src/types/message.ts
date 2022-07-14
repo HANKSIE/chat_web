@@ -1,3 +1,4 @@
+import Group from "./group";
 import User from "./user";
 
 export default interface Message {
@@ -6,4 +7,5 @@ export default interface Message {
   created_at: string;
   group_id: number;
   user?: User;
+  group?: Group;
 }

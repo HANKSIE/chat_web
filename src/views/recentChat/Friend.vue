@@ -1,6 +1,4 @@
 <template>
-  <search-input v-model="keyword" :search="searchFriend" />
-  <q-separator />
   <template v-if="isSearchAtLeastOnce && units.length === 0">
     <div class="q-mt-md text-h6 text-weight-bold row justify-center">
       沒有搜尋結果
@@ -23,54 +21,47 @@
 <script lang="ts">
 import { ref } from "@vue/reactivity";
 import UnitList from "@/components/UnitList.vue";
-import SearchInput from "@/components/SearchInput.vue";
 import { computed } from "@vue/runtime-core";
 import { Unit } from "@/types/components/unitlist";
 import { QInfiniteScroll } from "quasar";
-import useFriendStore from "@/stores/friend";
+import useRecentContactFriendStore from "@/stores/recentContactFriend";
 
 export default {
-  components: { UnitList, SearchInput },
+  components: { UnitList },
   setup() {
-    const keyword = ref("");
     const infiniteScroll = ref<QInfiniteScroll | null>(null);
     const isSearchAtLeastOnce = ref(false);
-    const friendStore = useFriendStore();
-
-    const searchFriend = () => {
-      isSearchAtLeastOnce.value = false;
-      friendStore.clear();
-      infiniteScroll.value?.resume();
-    };
+    const recentContactFriendStore = useRecentContactFriendStore();
 
     const load = async (_: number, done: (val: boolean) => void) => {
-      const data = await (friendStore.friends.length === 0
-        ? friendStore.search(10, keyword.value)
-        : friendStore.next());
-      friendStore.push(...data);
+      const data = await (recentContactFriendStore.messages.length === 0
+        ? recentContactFriendStore.search(10)
+        : recentContactFriendStore.next());
+      recentContactFriendStore.push(...data);
       done(data.length === 0);
       isSearchAtLeastOnce.value = true;
     };
 
-    if (friendStore.friends.length === 0) searchFriend();
+    if (recentContactFriendStore.messages.length === 0)
+      infiniteScroll.value?.resume();
 
     const units = computed<Unit[]>(() =>
-      friendStore.friends.map((val) => {
-        const { id, name, avatar_url } = val.user;
+      recentContactFriendStore.messages.map((message) => {
+        const friend = message.group!.members![0];
+        const { id, name, avatar_url } = friend;
         return {
           id,
           name,
           avatar_url,
-          group_id: val.group_id,
+          group_id: message.group!.id,
+          latest_message: message,
         };
       })
     );
 
     return {
-      keyword,
       units,
       load,
-      searchFriend,
       infiniteScroll,
       isSearchAtLeastOnce,
     };

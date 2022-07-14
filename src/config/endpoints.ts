@@ -14,6 +14,7 @@ export default {
         simplePaginate: "messages/search",
         restApi: "messages",
       },
+      recentContactCursorPaginate: "groups/recent-contact",
     },
     friend: {
       simplePaginate: "friends/search",

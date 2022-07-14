@@ -14,6 +14,11 @@
               個人頁面
             </q-tooltip>
           </q-tab>
+          <q-tab name="recent-chat" icon="sms">
+            <q-tooltip anchor="center right" self="center left">
+              聊天
+            </q-tooltip>
+          </q-tab>
           <q-tab name="friend" icon="person">
             <q-tooltip anchor="center right" self="center left">
               好友
@@ -22,11 +27,6 @@
           <q-tab name="group" icon="group">
             <q-tooltip anchor="center right" self="center left">
               群組
-            </q-tooltip>
-          </q-tab>
-          <q-tab name="sms" icon="sms">
-            <q-tooltip anchor="center right" self="center left">
-              聊天
             </q-tooltip>
           </q-tab>
           <q-space />
@@ -52,6 +52,9 @@
         transition-prev="jump-up"
         transition-next="jump-up"
       >
+        <q-tab-panel name="recent-chat">
+          <recent-chat-friend-panel />
+        </q-tab-panel>
         <q-tab-panel name="friend"> <friend-panel /> </q-tab-panel>
         <q-tab-panel name="group"> group </q-tab-panel>
         <q-tab-panel name="profile"><profile-panel :user="user" /></q-tab-panel>
@@ -66,8 +69,9 @@ import EventManager from "@/utils/eventManager";
 import { ref } from "@vue/reactivity";
 import FriendPanel from "@/views/Friend/Index.vue";
 import ProfilePanel from "@/views/Profile.vue";
+import RecentChatFriendPanel from "@/views/recentChat/Friend.vue";
 export default {
-  components: { ProfilePanel, FriendPanel },
+  components: { ProfilePanel, FriendPanel, RecentChatFriendPanel },
   setup() {
     const auth = useAuthStore();
     const logout = () =>
