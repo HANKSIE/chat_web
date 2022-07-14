@@ -24,34 +24,30 @@
 import { ref } from "@vue/reactivity";
 import UnitList from "@/components/UnitList.vue";
 import SearchInput from "@/components/SearchInput.vue";
-import endpoints from "@/config/endpoints";
 import { computed } from "@vue/runtime-core";
 import { Unit } from "@/types/components/unitlist";
-import FriendSimplePaginateData from "@/types/friendSimplePaginateData";
 import { QInfiniteScroll } from "quasar";
-import SimplePaginate from "@/utils/simplePaginate";
+import useFriendStore from "@/stores/friend";
+
 export default {
   components: { UnitList, SearchInput },
   setup() {
     const keyword = ref("");
-    const friends = ref<FriendSimplePaginateData[]>([]);
-
-    const simplePaginate = new SimplePaginate<FriendSimplePaginateData>(
-      endpoints.socialite.friend.simplePaginate
-    );
-
     const infiniteScroll = ref<QInfiniteScroll | null>(null);
     const isSearchAtLeastOnce = ref(false);
+    const friendStore = useFriendStore();
+
     const searchFriend = () => {
       isSearchAtLeastOnce.value = false;
-      friends.value = [];
+      friendStore.clear();
       infiniteScroll.value?.resume();
     };
+
     const load = async (_: number, done: (val: boolean) => void) => {
-      const data = await (friends.value.length === 0
-        ? simplePaginate.search(10, keyword.value)
-        : simplePaginate.next());
-      friends.value.push(...data);
+      const data = await (friendStore.friends.length === 0
+        ? friendStore.search(10, keyword.value)
+        : friendStore.next());
+      friendStore.push(...data);
       done(data.length === 0);
       isSearchAtLeastOnce.value = true;
     };
@@ -59,14 +55,13 @@ export default {
     searchFriend();
 
     const units = computed<Unit[]>(() =>
-      friends.value.map((val) => {
+      friendStore.friends.map((val) => {
         const { id, name, avatar_url } = val.user;
         return {
           id,
           name,
           avatar_url,
           group_id: val.group_id,
-          latest_message: val.latest_message,
         };
       })
     );

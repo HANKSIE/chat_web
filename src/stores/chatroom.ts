@@ -5,16 +5,16 @@ import { Unit } from "@/types/components/unitlist";
 import SimplePaginate from "@/utils/simplePaginate";
 interface State {
   unit: Unit | null;
-  simplePaginate: SimplePaginate<Message>;
   messages: Message[];
 }
+
+const simplePaginate = new SimplePaginate<Message>(
+  endpoints.socialite.group.message.simplePaginate
+);
 
 const useChatroomStore = defineStore("chatroom", {
   state: (): State => ({
     unit: null,
-    simplePaginate: new SimplePaginate<Message>(
-      endpoints.socialite.group.message.simplePaginate
-    ),
     messages: [],
   }),
   actions: {
@@ -27,6 +27,12 @@ const useChatroomStore = defineStore("chatroom", {
     },
     unshiftMessage(...messages: Message[]) {
       this.messages.unshift(...messages.slice().reverse());
+    },
+    search(perPage: number) {
+      return simplePaginate.search(this.unit?.group_id, perPage);
+    },
+    loadTop() {
+      return simplePaginate.next();
     },
   },
 });

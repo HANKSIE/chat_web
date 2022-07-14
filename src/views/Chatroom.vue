@@ -85,10 +85,10 @@ export default {
     );
     const loadTop = async (_: number, done: (val: boolean) => void) => {
       const messages = await (chatroomStore.messages.length === 0
-        ? chatroomStore.simplePaginate.search(chatroomStore.unit?.group_id, 10)
-        : chatroomStore.simplePaginate.next());
+        ? chatroomStore.search(10)
+        : chatroomStore.loadTop());
       chatroomStore.unshiftMessage(...messages);
-      done(messages.length === 0);
+      done(false);
     };
     const sendMessage = async () => {
       const res = await api.socialite.group.message.send(

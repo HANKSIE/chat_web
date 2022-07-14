@@ -17,13 +17,18 @@
           <q-tab name="friend" icon="person">
             <q-tooltip anchor="center right" self="center left">
               好友
-            </q-tooltip></q-tab
-          >
+            </q-tooltip>
+          </q-tab>
           <q-tab name="group" icon="group">
             <q-tooltip anchor="center right" self="center left">
               群組
-            </q-tooltip></q-tab
-          >
+            </q-tooltip>
+          </q-tab>
+          <q-tab name="sms" icon="sms">
+            <q-tooltip anchor="center right" self="center left">
+              聊天
+            </q-tooltip>
+          </q-tab>
           <q-space />
         </q-tabs>
         <div class="col-1 row justify-center">
@@ -47,9 +52,9 @@
         transition-prev="jump-up"
         transition-next="jump-up"
       >
-        <q-tab-panel name="friend"> <friend-page /> </q-tab-panel>
-        <q-tab-panel name="group"> <group-page /> </q-tab-panel>
-        <q-tab-panel name="profile"><profile-page :user="user" /></q-tab-panel>
+        <q-tab-panel name="friend"> <friend-panel /> </q-tab-panel>
+        <q-tab-panel name="group"> group </q-tab-panel>
+        <q-tab-panel name="profile"><profile-panel :user="user" /></q-tab-panel>
       </q-tab-panels>
     </template>
   </q-splitter>
@@ -59,11 +64,10 @@ import useAuthStore from "@/stores/auth";
 import api from "@/utils/api";
 import EventManager from "@/utils/eventManager";
 import { ref } from "@vue/reactivity";
-import FriendPage from "@/views/Friend/Index.vue";
-import ProfilePage from "@/views/Profile.vue";
-import GroupPage from "@/views/Group.vue";
+import FriendPanel from "@/views/Friend/Index.vue";
+import ProfilePanel from "@/views/Profile.vue";
 export default {
-  components: { ProfilePage, FriendPage, GroupPage },
+  components: { ProfilePanel, FriendPanel },
   setup() {
     const auth = useAuthStore();
     const logout = () =>
