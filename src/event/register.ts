@@ -6,6 +6,7 @@ const registers = [
   import("./listeners/clearStoreAndRedirectToLogin"),
   import("./listeners/echo/joinGroups"),
   import("./listeners/echo/leaveGroups"),
+  import("./listeners/updateRecentFriend"),
 ];
 
 export default async () => {

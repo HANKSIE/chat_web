@@ -31,6 +31,13 @@ const useRecentContactFriendStore = defineStore("recentContactFriend", {
     unshift(...messages: Message[]) {
       this.messages.unshift(...messages);
     },
+    update(message: Message) {
+      const index = this.messages.findIndex(
+        (msg) => msg.group!.id === message.group!.id
+      );
+      if (index !== -1) this.messages.splice(index, 1);
+      this.messages.unshift(message);
+    },
   },
 });
 

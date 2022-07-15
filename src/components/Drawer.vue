@@ -53,7 +53,7 @@
         transition-next="jump-up"
       >
         <q-tab-panel name="recent-chat">
-          <recent-chat-friend-panel />
+          <recent-chat-panel />
         </q-tab-panel>
         <q-tab-panel name="friend"> <friend-panel /> </q-tab-panel>
         <q-tab-panel name="group"> group </q-tab-panel>
@@ -69,9 +69,9 @@ import EventManager from "@/utils/eventManager";
 import { ref } from "@vue/reactivity";
 import FriendPanel from "@/views/Friend/Index.vue";
 import ProfilePanel from "@/views/Profile.vue";
-import RecentChatFriendPanel from "@/views/recentChat/Friend.vue";
+import RecentChatPanel from "@/views/recentChat/Index.vue";
 export default {
-  components: { ProfilePanel, FriendPanel, RecentChatFriendPanel },
+  components: { ProfilePanel, FriendPanel, RecentChatPanel },
   setup() {
     const auth = useAuthStore();
     const logout = () =>

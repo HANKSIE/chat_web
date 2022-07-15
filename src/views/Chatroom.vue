@@ -61,6 +61,7 @@ import EventManager from "@/utils/eventManager";
 import Message from "@/types/message";
 import { QScrollArea } from "quasar";
 import { nextTick } from "vue";
+import useRecentContactFriendStore from "@/stores/recentContactFriend";
 
 export default {
   components: { Avatar },
@@ -69,6 +70,7 @@ export default {
     const auth = useAuthStore();
     const text = ref("");
     const scrollArea = ref<QScrollArea>();
+    const recentContactFriendStore = useRecentContactFriendStore();
     EventManager.on(
       EventManager.EventType.RECEIVE_GROUP_MESSAGE,
       // scroll down
@@ -99,6 +101,10 @@ export default {
       const message = res.data.message;
       if (message) {
         chatroomStore.pushMessage(message);
+
+        if (message.group.is_one_to_one)
+          recentContactFriendStore.update(message);
+
         text.value = "";
         nextTick(() =>
           scrollArea.value?.setScrollPosition(

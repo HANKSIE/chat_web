@@ -25,6 +25,7 @@ import { computed } from "@vue/runtime-core";
 import { Unit } from "@/types/components/unitlist";
 import { QInfiniteScroll } from "quasar";
 import useRecentContactFriendStore from "@/stores/recentContactFriend";
+import useAuthStore from "@/stores/auth";
 
 export default {
   components: { UnitList },
@@ -32,7 +33,7 @@ export default {
     const infiniteScroll = ref<QInfiniteScroll | null>(null);
     const isSearchAtLeastOnce = ref(false);
     const recentContactFriendStore = useRecentContactFriendStore();
-
+    const auth = useAuthStore();
     const load = async (_: number, done: (val: boolean) => void) => {
       const data = await (recentContactFriendStore.messages.length === 0
         ? recentContactFriendStore.search(10)
@@ -47,7 +48,9 @@ export default {
 
     const units = computed<Unit[]>(() =>
       recentContactFriendStore.messages.map((message) => {
-        const friend = message.group!.members![0];
+        const friend = message.group!.members!.find(
+          (user) => user.id !== auth.user?.id
+        )!;
         const { id, name, avatar_url } = friend;
         return {
           id,
