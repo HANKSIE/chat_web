@@ -36,6 +36,9 @@ const useFriendStore = defineStore("friend", {
     unshift(...users: FriendSimplePaginateData[]) {
       this.friends.unshift(...users);
     },
+    remove(id: number) {
+      this.friends = this.friends.filter((friend) => friend.user.id !== id);
+    },
   },
 });
 

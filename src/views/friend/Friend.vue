@@ -1,7 +1,7 @@
 <template>
-  <search-input v-model="keyword" :search="searchFriend" />
+  <search-input v-model="keyword" @search="search" />
   <q-separator />
-  <template v-if="isSearchAtLeastOnce && units.length === 0">
+  <template v-if="hasLoaded && units.length === 0">
     <div class="q-mt-md text-h6 text-weight-bold row justify-center">
       沒有搜尋結果
     </div>
@@ -9,7 +9,15 @@
   <template v-else>
     <q-scroll-area style="height: 70vh" class="q-mt-sm">
       <q-infinite-scroll ref="infiniteScroll" @load="load" :offset="50">
-        <unit-list :units="units"></unit-list>
+        <unit-list
+          :units="units"
+          @avatar-click="showProfile"
+          @item-click="switchChatroom"
+        >
+          <template #list-item-side="{ unit }">
+            <q-btn flat color="alert" label="移除" @click="unfriend(unit.id)" />
+          </template>
+        </unit-list>
         <template v-slot:loading>
           <div class="row justify-center q-my-md">
             <q-spinner-dots color="primary" size="40px" />
@@ -19,26 +27,31 @@
     </q-scroll-area>
   </template>
 </template>
-
 <script lang="ts">
 import { ref } from "@vue/reactivity";
 import UnitList from "@/components/UnitList.vue";
 import SearchInput from "@/components/SearchInput.vue";
 import { computed } from "@vue/runtime-core";
-import { Unit } from "@/types/components/unitlist";
 import { QInfiniteScroll } from "quasar";
 import useFriendStore from "@/stores/friend";
+import ChattableUnit from "@/types/chattableUnit";
+import { useQuasar } from "quasar";
+import UnitProfile from "@/components/UnitProfile.vue";
+import useChatroomStore from "@/stores/chatroom";
+import EventManager from "@/utils/eventManager";
+import api from "@/utils/api";
 
 export default {
   components: { UnitList, SearchInput },
   setup() {
     const keyword = ref("");
     const infiniteScroll = ref<QInfiniteScroll | null>(null);
-    const isSearchAtLeastOnce = ref(false);
+    const hasLoaded = ref(false);
     const friendStore = useFriendStore();
-
-    const searchFriend = () => {
-      isSearchAtLeastOnce.value = false;
+    const $q = useQuasar();
+    const chatRoomStore = useChatroomStore();
+    const search = () => {
+      hasLoaded.value = false;
       friendStore.clear();
       infiniteScroll.value?.resume();
     };
@@ -49,12 +62,12 @@ export default {
         : friendStore.next());
       friendStore.push(...data);
       done(data.length === 0);
-      isSearchAtLeastOnce.value = true;
+      hasLoaded.value = true;
     };
 
-    if (friendStore.friends.length === 0) searchFriend();
+    if (friendStore.friends.length === 0) search();
 
-    const units = computed<Unit[]>(() =>
+    const units = computed<ChattableUnit[]>(() =>
       friendStore.friends.map((val) => {
         const { id, name, avatar_url } = val.user;
         return {
@@ -66,13 +79,31 @@ export default {
       })
     );
 
+    const showProfile = (unit: ChattableUnit) =>
+      $q.dialog({
+        component: UnitProfile,
+        componentProps: {
+          unit,
+        },
+      });
+
+    const switchChatroom = (unit: ChattableUnit) => chatRoomStore.init(unit);
+    EventManager.dispatch(EventManager.EventType.SWITCH_CHATROOM);
+
+    const unfriend = async (friendID: number) => {
+      await api.socialite.friend.unfriend(friendID);
+      friendStore.remove(friendID);
+    };
     return {
       keyword,
       units,
       load,
-      searchFriend,
+      search,
       infiniteScroll,
-      isSearchAtLeastOnce,
+      hasLoaded,
+      showProfile,
+      switchChatroom,
+      unfriend,
     };
   },
 };

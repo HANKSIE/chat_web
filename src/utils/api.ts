@@ -4,6 +4,7 @@ import { AxiosResponse } from "axios";
 import endpoints from "@/config/endpoints";
 import SimplePaginate from "@/types/simplePaginate";
 import Message from "@/types/message";
+import User from "@/types/user";
 const { auth, socialite } = endpoints;
 
 const simplePaginate =
@@ -73,6 +74,24 @@ const api = {
             body,
           });
         },
+      },
+    },
+    friend: {
+      request: {
+        send(
+          recipient_id: number
+        ): Promise<AxiosResponse<{ recipient: User }>> {
+          return http.post(socialite.friend.request.send, { recipient_id });
+        },
+        accept(sender_id: number): Promise<AxiosResponse<{ sender: User }>> {
+          return http.post(socialite.friend.request.accept, { sender_id });
+        },
+        deny(sender_id: number): Promise<AxiosResponse<{ sender: User }>> {
+          return http.post(socialite.friend.request.deny, { sender_id });
+        },
+      },
+      unfriend(friend_id: number): Promise<AxiosResponse<void>> {
+        return http.delete(socialite.friend.unfriend, { data: { friend_id } });
       },
     },
   },

@@ -17,7 +17,12 @@
   </template>
   <div v-else style="height: calc(100vh - 50px)" class="column">
     <q-scroll-area ref="scrollArea" class="q-px-md col-10">
-      <q-infinite-scroll @load="loadTop" :offset="50" reverse>
+      <q-infinite-scroll
+        ref="infiniteScroll"
+        @load="loadTop"
+        :offset="50"
+        reverse
+      >
         <template v-slot:loading>
           <div class="row justify-center q-my-md">
             <q-spinner color="primary" name="dots" size="40px" />
@@ -59,7 +64,7 @@ import { ref } from "@vue/reactivity";
 import api from "@/utils/api";
 import EventManager from "@/utils/eventManager";
 import Message from "@/types/message";
-import { QScrollArea } from "quasar";
+import { QInfiniteScroll, QScrollArea } from "quasar";
 import { nextTick } from "vue";
 import useRecentContactFriendStore from "@/stores/recentContactFriend";
 
@@ -70,6 +75,7 @@ export default {
     const auth = useAuthStore();
     const text = ref("");
     const scrollArea = ref<QScrollArea>();
+    const infiniteScroll = ref<QInfiniteScroll | null>(null);
     const recentContactFriendStore = useRecentContactFriendStore();
     EventManager.on(
       EventManager.EventType.RECEIVE_GROUP_MESSAGE,
@@ -85,13 +91,17 @@ export default {
         );
       }
     );
+    EventManager.on(EventManager.EventType.SWITCH_CHATROOM, () => {
+      infiniteScroll.value?.resume();
+    });
     const loadTop = async (_: number, done: (val: boolean) => void) => {
       const messages = await (chatroomStore.messages.length === 0
         ? chatroomStore.search(10)
         : chatroomStore.loadTop());
       chatroomStore.unshiftMessage(...messages);
-      done(false);
+      done(messages.length === 0);
     };
+
     const sendMessage = async () => {
       const res = await api.socialite.group.message.send(
         chatroomStore.unit!.group_id,
@@ -122,6 +132,7 @@ export default {
       sendMessage,
       scrollArea,
       loadTop,
+      infiniteScroll,
     };
   },
 };

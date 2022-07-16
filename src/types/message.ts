@@ -6,6 +6,6 @@ export default interface Message {
   body: string;
   created_at: string;
   group_id: number;
-  user?: User;
+  user: User;
   group?: Group;
 }

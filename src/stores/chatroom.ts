@@ -1,10 +1,10 @@
 import { defineStore } from "pinia";
 import Message from "@/types/message";
 import endpoints from "@/config/endpoints";
-import { Unit } from "@/types/components/unitlist";
+import ChattableUnit from "@/types/chattableUnit";
 import SimplePaginate from "@/utils/simplePaginate";
 interface State {
-  unit: Unit | null;
+  unit: ChattableUnit | null;
   messages: Message[];
 }
 
@@ -18,7 +18,7 @@ const useChatroomStore = defineStore("chatroom", {
     messages: [],
   }),
   actions: {
-    init(unit: Unit) {
+    init(unit: ChattableUnit) {
       this.messages = [];
       this.unit = unit;
     },

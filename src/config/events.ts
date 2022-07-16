@@ -5,6 +5,7 @@ enum EventType {
   RECEIVE_GROUP_MESSAGE,
   MEMBER_JOIN_GROUP,
   MEMBER_LEAVE_GROUP,
+  SWITCH_CHATROOM,
 }
 
 export default EventType;

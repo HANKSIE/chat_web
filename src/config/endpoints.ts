@@ -18,6 +18,15 @@ export default {
     },
     friend: {
       simplePaginate: "friends/search",
+      request: {
+        send: "friends/request/send",
+        accept: "friends/request/accept",
+        deny: "friends/request/deny",
+      },
+      unfriend: "friends",
+    },
+    user: {
+      simplePaginate: "users/search",
     },
   },
 };
