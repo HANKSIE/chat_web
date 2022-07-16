@@ -1,9 +1,9 @@
 import EventType from "@/config/events";
-import EventRegister from "@/types/eventRegister";
+import Listener from "@/types/listener";
 import EventManager from "@/utils/eventManager";
-
 import register from "../register";
-const registerAgain: EventRegister = {
+
+const listener: Listener = {
   event: EventType.LOGOUT,
   handle: () => {
     EventManager.removeAllListener();
@@ -11,4 +11,4 @@ const registerAgain: EventRegister = {
   },
 };
 
-export default registerAgain;
+export default listener;

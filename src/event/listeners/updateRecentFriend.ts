@@ -1,11 +1,11 @@
 import EventType from "@/config/events";
 import useRecentContactFriendStore from "@/stores/recentContactFriend";
-import EventRegister from "@/types/eventRegister";
+import Listener from "@/types/listener";
 import Message from "@/types/message";
 
 const recentContactFriendStore = useRecentContactFriendStore();
 
-const register: EventRegister = {
+const listener: Listener = {
   event: EventType.RECEIVE_GROUP_MESSAGE,
   handle: (message: Message) => {
     console.log("message: ", message);
@@ -15,4 +15,4 @@ const register: EventRegister = {
   },
 };
 
-export default register;
+export default listener;

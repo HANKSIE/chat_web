@@ -83,7 +83,9 @@ const api = {
         ): Promise<AxiosResponse<{ recipient: User }>> {
           return http.post(socialite.friend.request.send, { recipient_id });
         },
-        accept(sender_id: number): Promise<AxiosResponse<{ sender: User }>> {
+        accept(
+          sender_id: number
+        ): Promise<AxiosResponse<{ group_id: number }>> {
           return http.post(socialite.friend.request.accept, { sender_id });
         },
         deny(sender_id: number): Promise<AxiosResponse<{ sender: User }>> {

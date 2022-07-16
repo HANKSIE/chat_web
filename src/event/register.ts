@@ -1,18 +1,20 @@
 import EventManager from "@/utils/eventManager";
 
-const registers = [
+const listeners = [
+  import("./listeners/echo/connect"), // should call this first
   import("./listeners/removeAllListenerAndRegisterAgain"),
   import("./listeners/setAuthAndRedirectToDashboard"),
   import("./listeners/clearStoreAndRedirectToLogin"),
   import("./listeners/echo/joinGroups"),
   import("./listeners/echo/leaveGroups"),
+  import("./listeners/echo/listenUserChannel"),
   import("./listeners/updateRecentFriend"),
 ];
 
 export default async () => {
-  const results = await Promise.all(registers);
-  results.forEach((register) => {
-    const { event, handle } = register.default;
+  const results = await Promise.all(listeners);
+  results.forEach((listener) => {
+    const { event, handle } = listener.default;
     EventManager.on(event, handle);
   });
 };

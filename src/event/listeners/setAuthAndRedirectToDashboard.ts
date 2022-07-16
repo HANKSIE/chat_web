@@ -1,16 +1,18 @@
 import EventType from "@/config/events";
 import router from "@/router";
 import useAuthStore from "@/stores/auth";
-import EventRegister from "@/types/eventRegister";
+import Listener from "@/types/listener";
 import User from "@/types/user";
+import EventManager from "@/utils/eventManager";
 
-const register: EventRegister = {
+const listener: Listener = {
   event: EventType.LOGIN,
   handle: (user: User) => {
     const auth = useAuthStore();
     auth.set(user);
+    EventManager.dispatch(EventType.SET_AUTH_USER, user);
     router.push({ name: "chatroom" });
   },
 };
 
-export default register;
+export default listener;

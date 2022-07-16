@@ -2,9 +2,9 @@ import EventType from "@/config/events";
 import router from "@/router";
 import useAuthStore from "@/stores/auth";
 import useChatroomStore from "@/stores/chatroom";
-import EventRegister from "@/types/eventRegister";
+import Listener from "@/types/listener";
 
-const register: EventRegister = {
+const listener: Listener = {
   event: EventType.LOGOUT,
   handle: () => {
     const auth = useAuthStore();
@@ -15,4 +15,4 @@ const register: EventRegister = {
   },
 };
 
-export default register;
+export default listener;

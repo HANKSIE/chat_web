@@ -1,5 +1,6 @@
 enum EventType {
   LOGIN,
+  SET_AUTH_USER,
   LOGOUT,
   JOIN_GROUP,
   RECEIVE_GROUP_MESSAGE,

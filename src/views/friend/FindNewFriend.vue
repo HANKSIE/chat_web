@@ -22,14 +22,14 @@
           <template #list-item-side="{ unit }">
             <q-btn
               flat
-              v-if="unit.status === 0"
+              v-if="unit.status === UserStatus.STRANGER"
               color="primary"
-              label="邀請"
+              label="加好友"
               @click="sendFriendRequest(unit.id)"
             />
             <q-btn
               flat
-              v-if="unit.status === 3"
+              v-if="unit.status === UserStatus.INVITE_ME"
               label="同意"
               color="primary"
               @click="acceptFriendRequest(unit.id)"
@@ -59,6 +59,7 @@ import endpoints from "@/config/endpoints";
 import { useQuasar } from "quasar";
 import UnitProfile from "@/components/UnitProfile.vue";
 import api from "@/utils/api";
+import { joinGroup } from "@/utils/socialite";
 
 interface UserSimplePaginateData {
   user: User;
@@ -67,6 +68,14 @@ interface UserSimplePaginateData {
 
 interface FindNewFriendUnit extends Unit {
   status: number;
+}
+
+enum UserStatus {
+  STRANGER = 0,
+  ME,
+  FRIEND,
+  INVITE_ME,
+  INVITING,
 }
 
 export default {
@@ -104,7 +113,7 @@ export default {
           id,
           name,
           avatar_url,
-          itemCaption: ["", "我", "朋友", "正在邀請你", "邀請中"][val.status],
+          itemCaption: ["", "我", "朋友", "", "邀請中"][val.status],
           status: val.status,
         };
       })
@@ -120,12 +129,15 @@ export default {
 
     const sendFriendRequest = async (recipientID: number) => {
       await api.socialite.friend.request.send(recipientID);
-      userData.value.find((d) => d.user.id === recipientID)!.status = 4;
+      userData.value.find((d) => d.user.id === recipientID)!.status =
+        UserStatus.INVITING;
     };
 
     const acceptFriendRequest = async (senderID: number) => {
-      await api.socialite.friend.request.accept(senderID);
-      userData.value.find((d) => d.user.id === senderID)!.status = 2;
+      const res = await api.socialite.friend.request.accept(senderID);
+      userData.value.find((d) => d.user.id === senderID)!.status =
+        UserStatus.FRIEND;
+      joinGroup(res.data.group_id);
     };
 
     return {
@@ -139,6 +151,7 @@ export default {
       showProfile,
       sendFriendRequest,
       acceptFriendRequest,
+      UserStatus,
     };
   },
 };
