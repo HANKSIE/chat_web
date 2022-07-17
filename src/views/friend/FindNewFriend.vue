@@ -128,9 +128,16 @@ export default {
       });
 
     const sendFriendRequest = async (recipientID: number) => {
-      await api.socialite.friend.request.send(recipientID);
-      userData.value.find((d) => d.user.id === recipientID)!.status =
-        UserStatus.INVITING;
+      const res = await api.socialite.friend.request.send(recipientID);
+      const { be_friend, group_id } = res.data;
+      if (be_friend) {
+        userData.value.find((d) => d.user.id === recipientID)!.status =
+          UserStatus.FRIEND;
+        joinGroup(group_id!);
+      } else {
+        userData.value.find((d) => d.user.id === recipientID)!.status =
+          UserStatus.INVITING;
+      }
     };
 
     const acceptFriendRequest = async (senderID: number) => {

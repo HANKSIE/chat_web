@@ -80,7 +80,7 @@ const api = {
       request: {
         send(
           recipient_id: number
-        ): Promise<AxiosResponse<{ recipient: User }>> {
+        ): Promise<AxiosResponse<{ be_friend: boolean; group_id?: number }>> {
           return http.post(socialite.friend.request.send, { recipient_id });
         },
         accept(

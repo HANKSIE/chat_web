@@ -11,11 +11,7 @@
           :units="units"
           @avatar-click="showProfile"
           @item-click="switchChatroom"
-        >
-          <template #list-item-side>
-            <q-badge rounded color="red" label="5" />
-          </template>
-        </unit-list>
+        />
         <template v-slot:loading>
           <div class="row justify-center q-my-md">
             <q-spinner-dots color="primary" size="40px" />

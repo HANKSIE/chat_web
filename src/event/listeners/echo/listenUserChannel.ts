@@ -7,7 +7,6 @@ import { joinGroup, leaveGroup } from "@/utils/socialite";
 const listener: Listener = {
   event: EventType.SET_AUTH_USER,
   handle: (user: User) => {
-    console.log(EchoManager);
     EchoManager.echo
       ?.private(`user.${user.id}`)
       .listen(".befriend", (data: { group_id: number }) => {
