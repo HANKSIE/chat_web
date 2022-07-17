@@ -20,7 +20,9 @@
             </template>
           </q-input>
         </q-card-section>
-
+        <q-card-section>
+          <validation-error :errors="errors" />
+        </q-card-section>
         <q-card-actions class="row justify-center">
           <div class="col-3">
             <q-btn
@@ -33,7 +35,11 @@
         </q-card-actions>
         <q-separator class="q-mt-sm" />
         <q-card-section class="row justify-center">
-          還沒註冊嗎?
+          <q-btn
+            flat
+            @click="$router.push({ name: 'register' })"
+            label="還沒註冊嗎?"
+          />
         </q-card-section>
       </q-card>
     </q-form>
@@ -43,20 +49,31 @@
 import { ref } from "@vue/reactivity";
 import api from "@/utils/api";
 import EventManager from "@/utils/eventManager";
+import ValidationError from "@/components/ValidationError.vue";
+import { AxiosError } from "axios";
+import ValidationErrorType from "@/types/responses/validationError";
 export default {
+  components: { ValidationError },
   setup() {
     const email = ref("iamfaker@gmail.com"),
       password = ref("iamfaker");
 
+    const errors = ref({});
     return {
       login: () =>
         api.auth
           .login(email.value, password.value)
-          .then((res) =>
-            EventManager.dispatch(EventManager.EventType.LOGIN, res.data.user)
-          ),
+          .then((res) => {
+            EventManager.dispatch(EventManager.EventType.LOGIN, res.data.user);
+            errors.value = {};
+          })
+          .catch((err: AxiosError<ValidationErrorType>) => {
+            if (err.response?.status === 422)
+              errors.value = err.response.data.errors;
+          }),
       email,
       password,
+      errors,
     };
   },
 };

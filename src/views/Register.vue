@@ -43,6 +43,9 @@
         <q-card-section>
           <avatar-picker v-model="avatar" />
         </q-card-section>
+        <q-card-section>
+          <validation-error :errors="errors" />
+        </q-card-section>
         <q-card-actions class="row justify-center">
           <div class="col-3">
             <q-btn
@@ -53,6 +56,11 @@
             />
           </div>
         </q-card-actions>
+        <q-btn
+          flat
+          @click="$router.push({ name: 'login' })"
+          label="已經有帳號了"
+        />
       </q-card>
     </q-form>
   </full-center>
@@ -62,8 +70,11 @@ import { ref } from "@vue/reactivity";
 import AvatarPicker from "@/components/AvatarPicker.vue";
 import api from "@/utils/api";
 import EventManager from "@/utils/eventManager";
+import ValidationError from "@/components/ValidationError.vue";
+import { AxiosError } from "axios";
+import ValidationErrorType from "@/types/responses/validationError";
 export default {
-  components: { AvatarPicker },
+  components: { AvatarPicker, ValidationError },
   setup() {
     const email = ref(""),
       password = ref(""),
@@ -71,6 +82,7 @@ export default {
       name = ref(""),
       avatar = ref(null);
 
+    const errors = ref({});
     const register = () => {
       api.auth
         .register(
@@ -82,7 +94,11 @@ export default {
         )
         .then((res) =>
           EventManager.dispatch(EventManager.EventType.LOGIN, res.data.user)
-        );
+        )
+        .catch((err: AxiosError<ValidationErrorType>) => {
+          if (err.response?.status === 422)
+            errors.value = err.response.data.errors;
+        });
     };
     return {
       register,
@@ -91,6 +107,7 @@ export default {
       password,
       confirmPassword,
       avatar,
+      errors,
     };
   },
 };

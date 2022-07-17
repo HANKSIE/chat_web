@@ -28,7 +28,7 @@ http.interceptors.response.use(
     ) {
       httpConfig.unauthHandle();
     }
-    return Promise.reject(error.response);
+    return Promise.reject(error);
   }
 );
 

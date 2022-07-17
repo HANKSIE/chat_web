@@ -28,11 +28,14 @@ export default {
     };
     const updateImage = () => {
       const imgs = fileChooser.value?.files;
-      if (imgs && imgs.length > 0) {
+      if (imgs && imgs.length > 0 && isFileImage(imgs[0])) {
         image.value = imgs[0];
         emit("update:modelValue", image.value);
       }
     };
+
+    const isFileImage = (file: File) => file["type"].split("/")[0] === "image";
+
     return {
       image,
       imageUrl,
