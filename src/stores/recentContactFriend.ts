@@ -5,23 +5,17 @@ import Message from "@/types/message";
 
 interface State {
   messages: Message[];
+  simplePaginate: SimplePaginate<Message>;
 }
-
-const simplePaginate = new SimplePaginate<Message>(
-  endpoints.socialite.group.recentContactCursorPaginate
-);
 
 const useRecentContactFriendStore = defineStore("recentContactFriend", {
   state: (): State => ({
     messages: [],
+    simplePaginate: new SimplePaginate<Message>(
+      endpoints.socialite.group.recentContactCursorPaginate
+    ),
   }),
   actions: {
-    search(perPage: number) {
-      return simplePaginate.search(1, perPage);
-    },
-    next() {
-      return simplePaginate.next();
-    },
     clear() {
       this.messages = [];
     },

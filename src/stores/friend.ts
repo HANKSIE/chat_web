@@ -10,23 +10,17 @@ interface FriendSimplePaginateData {
 
 interface State {
   friends: FriendSimplePaginateData[];
+  simplePaginate: SimplePaginate<FriendSimplePaginateData>;
 }
-
-const simplePaginate = new SimplePaginate<FriendSimplePaginateData>(
-  endpoints.socialite.friend.simplePaginate
-);
 
 const useFriendStore = defineStore("friend", {
   state: (): State => ({
     friends: [],
+    simplePaginate: new SimplePaginate<FriendSimplePaginateData>(
+      endpoints.socialite.friend.simplePaginate
+    ),
   }),
   actions: {
-    search(perPage: number, keyword: string) {
-      return simplePaginate.search(perPage, keyword);
-    },
-    next() {
-      return simplePaginate.next();
-    },
     clear() {
       this.friends = [];
     },
