@@ -22,6 +22,8 @@ export default {
         send: "friends/request/send",
         accept: "friends/request/accept",
         deny: "friends/request/deny",
+        toMe: "friends/requests/to",
+        fromMe: "friends/request/from",
       },
       unfriend: "friends",
     },

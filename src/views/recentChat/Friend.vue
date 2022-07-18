@@ -81,8 +81,10 @@ export default {
         },
       });
 
-    const switchChatroom = (unit: ChattableUnit) => chatRoomStore.init(unit);
-    EventManager.dispatch(EventManager.EventType.SWITCH_CHATROOM);
+    const switchChatroom = (unit: ChattableUnit) => {
+      chatRoomStore.init(unit);
+      EventManager.dispatch(EventManager.EventType.SWITCH_CHATROOM);
+    };
 
     return {
       units,

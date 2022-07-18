@@ -10,7 +10,6 @@ const listener: Listener = {
     EchoManager.echo
       ?.private(`user.${user.id}`)
       .listen(".befriend", (data: { group_id: number }) => {
-        console.log("be friend!");
         joinGroup(data.group_id);
       })
       .listen(".unfriend", (data: { group_id: number }) => {

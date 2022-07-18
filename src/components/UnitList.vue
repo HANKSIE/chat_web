@@ -25,6 +25,8 @@
           <q-item-label caption v-if="unit.sideTopCaption">
             {{ unit.sideTopCaption }}
           </q-item-label>
+        </q-item-section>
+        <q-item-section side>
           <slot name="list-item-side" :unit="unit"></slot>
         </q-item-section>
       </slot>

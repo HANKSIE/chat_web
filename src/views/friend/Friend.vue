@@ -87,8 +87,10 @@ export default {
         },
       });
 
-    const switchChatroom = (unit: ChattableUnit) => chatRoomStore.init(unit);
-    EventManager.dispatch(EventManager.EventType.SWITCH_CHATROOM);
+    const switchChatroom = (unit: ChattableUnit) => {
+      chatRoomStore.init(unit);
+      EventManager.dispatch(EventManager.EventType.SWITCH_CHATROOM);
+    };
 
     const unfriend = async (friendID: number) => {
       await api.socialite.friend.unfriend(friendID);
