@@ -10,7 +10,12 @@
       @item-click="switchChatroom"
     >
       <template #list-item-side="{ unit }">
-        <q-btn flat color="alert" label="移除" @click="unfriend(unit.id)" />
+        <q-btn
+          flat
+          color="alert"
+          label="移除"
+          @click="unfriend(unit.id, unit.group_id)"
+        />
       </template>
     </unit-list>
   </searchable-infinite-scroll>
@@ -32,7 +37,7 @@ export default {
     const friendStore = useFriendStore();
 
     const $q = useQuasar();
-    const chatRoomStore = useChatroomStore();
+    const chatroomStore = useChatroomStore();
 
     const units = computed<ChattableUnit[]>(() =>
       friendStore.friends.map((val) => {
@@ -55,12 +60,13 @@ export default {
       });
 
     const switchChatroom = (unit: ChattableUnit) => {
-      chatRoomStore.init(unit);
+      chatroomStore.init(unit);
       EventManager.dispatch(EventManager.EventType.SWITCH_CHATROOM);
     };
 
-    const unfriend = async (friendID: number) => {
+    const unfriend = async (friendID: number, groupID: number) => {
       await api.socialite.friend.unfriend(friendID);
+      if (groupID === chatroomStore.unit?.group_id) chatroomStore.init();
       friendStore.remove(friendID);
     };
 

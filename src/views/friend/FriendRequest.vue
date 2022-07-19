@@ -42,6 +42,7 @@ import SimplePaginate from "@/utils/simplePaginate";
 import endpoints from "@/config/endpoints";
 import api from "@/utils/api";
 import InfiniteScroll from "@/components/InfiniteScroll.vue";
+import { joinGroup } from "@/utils/socialite";
 export default {
   components: { UnitList, InfiniteScroll },
   setup() {
@@ -71,10 +72,11 @@ export default {
       });
 
     const accept = async (senderID: number) => {
-      await api.socialite.friend.request.accept(senderID);
+      const res = await api.socialite.friend.request.accept(senderID);
       recipients.value = recipients.value.filter(
         (user) => user.id !== senderID
       );
+      joinGroup(res.data.group_id);
     };
 
     const deny = async (senderID: number) => {

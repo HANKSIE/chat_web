@@ -59,10 +59,16 @@
         icon="sentiment_satisfied"
         :done="step > 2"
       >
-        <div style="width: 35vw" class="row flex-center">
+        <div style="width: 35vw" class="column flex-center">
           <avatar-picker v-model="avatar" :name="name" size="150px" />
+          <q-btn
+            class="q-mt-md"
+            flat
+            @click="() => (avatar = null)"
+            label="清除"
+          />
         </div>
-        <q-btn @click="() => (avatar = null)" label="清除" />
+
         <q-stepper-navigation>
           <q-btn @click="step = 3" color="primary" label="下一步" />
           <q-btn
@@ -75,7 +81,7 @@
         </q-stepper-navigation>
       </q-step>
 
-      <q-step :name="3" title="提交" icon="check">
+      <q-step :name="3" title="註冊" icon="check">
         <div style="width: 35vw">
           <validation-error :errors="errors" />
         </div>

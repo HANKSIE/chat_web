@@ -18,9 +18,9 @@ const useChatroomStore = defineStore("chatroom", {
     messages: [],
   }),
   actions: {
-    init(unit: ChattableUnit) {
+    init(unit?: ChattableUnit) {
       this.messages = [];
-      this.unit = unit;
+      this.unit = unit || null;
     },
     pushMessage(...messages: Message[]) {
       this.messages.push(...messages.slice().reverse());
