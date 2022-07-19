@@ -19,7 +19,7 @@ import useRecentContactFriendStore from "@/stores/recentContactFriend";
 import useAuthStore from "@/stores/auth";
 import ChattableUnit from "@/types/chattableUnit";
 import { useQuasar } from "quasar";
-import UnitProfile from "@/components/UnitProfile.vue";
+import UnitProfileDialog from "@/components/UnitProfileDialog.vue";
 import EventManager from "@/utils/eventManager";
 import useChatroomStore from "@/stores/chatroom";
 import InfiniteScroll from "@/components/InfiniteScroll.vue";
@@ -51,7 +51,7 @@ export default {
 
     const showProfile = (unit: ChattableUnit) =>
       $q.dialog({
-        component: UnitProfile,
+        component: UnitProfileDialog,
         componentProps: {
           unit,
         },

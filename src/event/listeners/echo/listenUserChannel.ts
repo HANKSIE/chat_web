@@ -1,10 +1,9 @@
 import EventType from "@/config/events";
-import useChatroomStore from "@/stores/chatroom";
 import Listener from "@/types/listener";
 import User from "@/types/user";
 import EchoManager from "@/utils/echoManager";
 import { joinGroup, leaveGroup } from "@/utils/socialite";
-const chatroomStore = useChatroomStore();
+
 const listener: Listener = {
   event: EventType.SET_AUTH_USER,
   handle: (user: User) => {

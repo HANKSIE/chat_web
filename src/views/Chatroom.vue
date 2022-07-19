@@ -20,8 +20,8 @@
       <q-infinite-scroll
         ref="infiniteScroll"
         @load="loadTop"
-        :offset="50"
         reverse
+        :offset="10"
       >
         <template v-slot:loading>
           <div class="row justify-center q-my-md">
@@ -77,21 +77,23 @@ export default {
     const scrollArea = ref<QScrollArea>();
     const infiniteScroll = ref<QInfiniteScroll | null>(null);
     const recentContactFriendStore = useRecentContactFriendStore();
+
+    const scrollToBottom = () => {
+      scrollArea.value?.setScrollPosition(
+        "vertical",
+        scrollArea.value.getScrollTarget().scrollHeight
+      );
+    };
     EventManager.on(
       EventManager.EventType.RECEIVE_GROUP_MESSAGE,
-      // scroll down
       (message: Message) => {
         if (chatroomStore.unit?.group_id !== message.group_id) return;
         chatroomStore.pushMessage(message);
-        nextTick(() =>
-          scrollArea.value?.setScrollPosition(
-            "vertical",
-            scrollArea.value.getScrollTarget().scrollHeight
-          )
-        );
+        nextTick(() => scrollToBottom());
       }
     );
     EventManager.on(EventManager.EventType.SWITCH_CHATROOM, () => {
+      scrollToBottom();
       infiniteScroll.value?.resume();
     });
     const loadTop = async (_: number, done: (val: boolean) => void) => {

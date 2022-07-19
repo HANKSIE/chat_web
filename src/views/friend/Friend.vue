@@ -10,12 +10,7 @@
       @item-click="switchChatroom"
     >
       <template #list-item-side="{ unit }">
-        <q-btn
-          flat
-          color="alert"
-          label="移除"
-          @click="unfriend(unit.id, unit.group_id)"
-        />
+        <q-btn flat color="alert" label="移除" @click="unfriend(unit)" />
       </template>
     </unit-list>
   </searchable-infinite-scroll>
@@ -26,11 +21,13 @@ import { computed } from "@vue/runtime-core";
 import useFriendStore from "@/stores/friend";
 import ChattableUnit from "@/types/chattableUnit";
 import { useQuasar } from "quasar";
-import UnitProfile from "@/components/UnitProfile.vue";
+import UnitProfileDialog from "@/components/UnitProfileDialog.vue";
 import useChatroomStore from "@/stores/chatroom";
 import EventManager from "@/utils/eventManager";
 import api from "@/utils/api";
 import SearchableInfiniteScroll from "@/components/SearchableInfiniteScroll.vue";
+import ConfirmDialog from "@/components/ConfirmDialog.vue";
+
 export default {
   components: { UnitList, SearchableInfiniteScroll },
   setup() {
@@ -53,7 +50,7 @@ export default {
 
     const showProfile = (unit: ChattableUnit) =>
       $q.dialog({
-        component: UnitProfile,
+        component: UnitProfileDialog,
         componentProps: {
           unit,
         },
@@ -64,10 +61,19 @@ export default {
       EventManager.dispatch(EventManager.EventType.SWITCH_CHATROOM);
     };
 
-    const unfriend = async (friendID: number, groupID: number) => {
-      await api.socialite.friend.unfriend(friendID);
-      if (groupID === chatroomStore.unit?.group_id) chatroomStore.init();
-      friendStore.remove(friendID);
+    const unfriend = (unit: ChattableUnit) => {
+      $q.dialog({
+        component: ConfirmDialog,
+        componentProps: {
+          okHandle: async () => {
+            await api.socialite.friend.unfriend(unit.id);
+            if (unit.group_id === chatroomStore.unit?.group_id)
+              chatroomStore.init();
+            friendStore.remove(unit.id);
+          },
+          message: `確定要將 <span class="ellipsis text-weight-bold" style="width: 250px">${unit.name}</span> 從好友清單移除嗎?`,
+        },
+      });
     };
 
     return {

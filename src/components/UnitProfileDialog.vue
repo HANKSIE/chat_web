@@ -22,6 +22,7 @@ import { useDialogPluginComponent } from "quasar";
 import Avatar from "@/components/Avatar.vue";
 export default {
   props: ["unit"],
+  emits: [...useDialogPluginComponent.emits],
   components: { Avatar },
   setup() {
     const { dialogRef, onDialogHide } = useDialogPluginComponent();

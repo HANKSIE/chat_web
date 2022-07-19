@@ -6,7 +6,7 @@
   </template>
   <template v-else>
     <q-scroll-area style="height: 70vh" class="q-mt-sm">
-      <q-infinite-scroll ref="qInfiniteScroll" @load="load" :offset="50">
+      <q-infinite-scroll ref="qInfiniteScroll" @load="load" :offset="10">
         <slot></slot>
         <template v-slot:loading>
           <div class="row justify-center q-my-md">

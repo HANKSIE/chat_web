@@ -35,7 +35,7 @@ import { ref } from "@vue/reactivity";
 import UnitList from "@/components/UnitList.vue";
 import { computed } from "@vue/runtime-core";
 import { useQuasar } from "quasar";
-import UnitProfile from "@/components/UnitProfile.vue";
+import UnitProfileDialog from "@/components/UnitProfileDialog.vue";
 import Unit from "@/types/unit";
 import User from "@/types/user";
 import SimplePaginate from "@/utils/simplePaginate";
@@ -65,7 +65,7 @@ export default {
 
     const showProfile = (unit: Unit) =>
       $q.dialog({
-        component: UnitProfile,
+        component: UnitProfileDialog,
         componentProps: {
           unit,
         },

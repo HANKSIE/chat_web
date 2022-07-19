@@ -39,7 +39,7 @@ import User from "@/types/user";
 import SimplePaginate from "@/utils/simplePaginate";
 import endpoints from "@/config/endpoints";
 import { useQuasar } from "quasar";
-import UnitProfile from "@/components/UnitProfile.vue";
+import UnitProfileDialog from "@/components/UnitProfileDialog.vue";
 import api from "@/utils/api";
 import { joinGroup } from "@/utils/socialite";
 import SearchableInfiniteScroll from "@/components/SearchableInfiniteScroll.vue";
@@ -85,7 +85,7 @@ export default {
 
     const showProfile = (unit: FindNewFriendUnit) =>
       $q.dialog({
-        component: UnitProfile,
+        component: UnitProfileDialog,
         componentProps: {
           unit,
         },
