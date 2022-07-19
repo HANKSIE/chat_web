@@ -10,22 +10,7 @@
       @item-click="showProfile"
     >
       <template #list-item-side="{ unit }">
-        <div class="row">
-          <q-btn
-            dense
-            flat
-            color="primary"
-            label="同意"
-            @click="accept(unit.id)"
-          />
-          <q-btn
-            dense
-            class="q-ml-sm"
-            flat
-            label="刪除"
-            @click="deny(unit.id)"
-          />
-        </div>
+        <q-btn dense flat label="收回" @click="revoke(unit)" />
       </template>
     </unit-list>
   </infinite-scroll>
@@ -42,14 +27,14 @@ import SimplePaginate from "@/utils/simplePaginate";
 import endpoints from "@/config/endpoints";
 import api from "@/utils/api";
 import InfiniteScroll from "@/components/InfiniteScroll.vue";
-import { joinGroup } from "@/utils/socialite";
+import ConfirmDialog from "@/components/ConfirmDialog.vue";
 export default {
   components: { UnitList, InfiniteScroll },
   setup() {
     const $q = useQuasar();
     const recipients = ref<User[]>([]);
     const cursorPaginate = new SimplePaginate<User>(
-      endpoints.socialite.friend.request.toMe
+      endpoints.socialite.friend.request.fromMe
     );
 
     const units = computed<Unit[]>(() =>
@@ -71,27 +56,24 @@ export default {
         },
       });
 
-    const accept = async (senderID: number) => {
-      const res = await api.socialite.friend.request.accept(senderID);
-      recipients.value = recipients.value.filter(
-        (user) => user.id !== senderID
-      );
-      joinGroup(res.data.group_id);
-    };
-
-    const deny = async (senderID: number) => {
-      await api.socialite.friend.request.deny(senderID);
-      recipients.value = recipients.value.filter(
-        (user) => user.id !== senderID
-      );
+    const revoke = async (unit: Unit) => {
+      $q.dialog({
+        component: ConfirmDialog,
+        componentProps: {
+          okHandle: async () => {
+            await api.socialite.friend.request.revoke(unit.id);
+            recipients.value = recipients.value.filter((r) => r.id !== unit.id);
+          },
+          message: `收回給 <span class="ellipsis text-weight-bold" style="width: 250px">${unit.name}</span> 的好友邀請?`,
+        },
+      });
     };
     return {
       units,
       cursorPaginate,
       recipients,
       showProfile,
-      accept,
-      deny,
+      revoke,
     };
   },
 };
