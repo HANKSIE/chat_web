@@ -35,11 +35,11 @@
         </q-card-actions>
         <q-separator class="q-mt-sm" />
         <q-card-section class="row justify-center">
-          <q-btn
-            flat
+          <span
+            class="cursor-pointer"
             @click="$router.push({ name: 'register' })"
-            label="還沒註冊嗎?"
-          />
+            >還沒註冊嗎?</span
+          >
         </q-card-section>
       </q-card>
     </q-form>

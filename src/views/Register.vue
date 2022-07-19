@@ -1,68 +1,90 @@
 <template>
   <full-center>
-    <q-form @submit.prevent="register">
-      <q-card>
-        <q-card-section>
-          <div class="text-h4 text-center">註冊</div>
-        </q-card-section>
-
-        <q-card-section>
-          <q-input filled v-model="email" label="信箱" type="email">
-            <template v-slot:prepend>
-              <q-icon name="email" />
-            </template>
-          </q-input>
-        </q-card-section>
-        <q-card-section>
-          <q-input filled v-model="name" label="名稱" type="text">
-            <template v-slot:prepend>
-              <q-icon name="person" />
-            </template>
-          </q-input>
-        </q-card-section>
-        <q-card-section>
-          <q-input filled v-model="password" label="密碼" type="password">
-            <template v-slot:prepend>
-              <q-icon name="lock" />
-            </template>
-          </q-input>
-        </q-card-section>
-        <q-card-section>
-          <q-input
-            filled
-            v-model="confirmPassword"
-            label="確認密碼"
-            type="password"
-          >
-            <template v-slot:prepend>
-              <q-icon name="lock" />
-            </template>
-          </q-input>
-        </q-card-section>
-
-        <q-card-section>
-          <avatar-picker v-model="avatar" />
-        </q-card-section>
-        <q-card-section>
-          <validation-error :errors="errors" />
-        </q-card-section>
-        <q-card-actions class="row justify-center">
-          <div class="col-3">
-            <q-btn
-              label="註冊"
-              type="submit"
-              color="primary"
-              class="full-width"
-            />
+    <q-stepper v-model="step" vertical color="primary" animated>
+      <q-step :name="1" title="填寫基本資料" icon="settings" :done="step > 1">
+        <div style="width: 35vw">
+          <div class="q-py-sm">
+            <q-input filled v-model="email" label="信箱" type="email">
+              <template v-slot:prepend>
+                <q-icon name="email" />
+              </template>
+            </q-input>
           </div>
-        </q-card-actions>
-        <q-btn
-          flat
-          @click="$router.push({ name: 'login' })"
-          label="已經有帳號了"
-        />
-      </q-card>
-    </q-form>
+
+          <div class="q-py-sm">
+            <q-input filled v-model="name" label="名稱" type="text">
+              <template v-slot:prepend>
+                <q-icon name="person" />
+              </template>
+            </q-input>
+          </div>
+
+          <div class="q-py-sm">
+            <q-input filled v-model="password" label="密碼" type="password">
+              <template v-slot:prepend>
+                <q-icon name="lock" />
+              </template>
+            </q-input>
+          </div>
+
+          <div class="q-py-sm">
+            <q-input
+              filled
+              v-model="confirmPassword"
+              label="確認密碼"
+              type="password"
+            >
+              <template v-slot:prepend>
+                <q-icon name="lock" />
+              </template>
+            </q-input>
+          </div>
+          <div class="row justify-center">
+            <span
+              class="cursor-pointer"
+              @click="$router.push({ name: 'login' })"
+              >已經有帳號了?</span
+            >
+          </div>
+        </div>
+
+        <q-stepper-navigation>
+          <q-btn @click="step = 2" color="primary" label="下一步" />
+        </q-stepper-navigation>
+      </q-step>
+
+      <q-step
+        :name="2"
+        title="設置頭像"
+        icon="sentiment_satisfied"
+        :done="step > 2"
+      >
+        <div style="width: 35vw" class="row flex-center">
+          <avatar-picker v-model="avatar" :name="name" size="150px" />
+        </div>
+        <q-btn @click="() => (avatar = null)" label="清除" />
+        <q-stepper-navigation>
+          <q-btn @click="step = 3" color="primary" label="下一步" />
+          <q-btn
+            flat
+            @click="step = 1"
+            color="primary"
+            label="上一步"
+            class="q-ml-sm"
+          />
+        </q-stepper-navigation>
+      </q-step>
+
+      <q-step :name="3" title="提交" icon="check">
+        <div style="width: 35vw">
+          <validation-error :errors="errors" />
+        </div>
+        <q-stepper-navigation>
+          <q-btn @click="register" color="primary" label="註冊" />
+          <q-btn flat @click="step = 2" label="上一步" class="q-ml-sm" />
+        </q-stepper-navigation>
+      </q-step>
+    </q-stepper>
   </full-center>
 </template>
 <script lang="ts">
@@ -82,6 +104,7 @@ export default {
       name = ref(""),
       avatar = ref(null);
 
+    const step = ref(1);
     const errors = ref({});
     const register = () => {
       api.auth
@@ -108,6 +131,7 @@ export default {
       confirmPassword,
       avatar,
       errors,
+      step,
     };
   },
 };

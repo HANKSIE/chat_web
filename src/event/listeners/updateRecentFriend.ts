@@ -8,7 +8,6 @@ const recentContactFriendStore = useRecentContactFriendStore();
 const listener: Listener = {
   event: EventType.RECEIVE_GROUP_MESSAGE,
   handle: (message: Message) => {
-    console.log("message: ", message);
     if (message.group!.is_one_to_one) {
       recentContactFriendStore.update(message);
     }

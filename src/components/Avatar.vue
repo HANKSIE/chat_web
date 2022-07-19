@@ -1,5 +1,5 @@
 <template>
-  <q-avatar color="primary" size="25px">
+  <q-avatar :color="src ? 'white' : 'primary'" size="25px">
     <template v-if="src !== null">
       <q-img :src="src" />
     </template>
@@ -10,7 +10,6 @@
 </template>
 
 <script lang="ts">
-import defaultAvatar from "@/assets/default_avatar.png";
 export default {
   props: {
     name: {
@@ -22,6 +21,5 @@ export default {
       default: null,
     },
   },
-  setup: () => ({ defaultAvatar }),
 };
 </script>
