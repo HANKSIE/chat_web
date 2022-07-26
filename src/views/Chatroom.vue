@@ -114,8 +114,8 @@ export default {
       if (message) {
         chatroomStore.pushMessage(message);
 
-        if (message.group.is_one_to_one)
-          recentContactFriendStore.update(message);
+        if (message.group?.is_one_to_one)
+          recentContactFriendStore.update({ message, unread: 0 });
 
         text.value = "";
         nextTick(() =>

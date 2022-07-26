@@ -4,7 +4,7 @@ import EchoManager from "@/utils/echoManager";
 const listener: Listener = {
   event: EventType.LOGOUT,
   handle: () => {
-    EchoManager.destroy();
+    EchoManager.rebuild();
   },
 };
 

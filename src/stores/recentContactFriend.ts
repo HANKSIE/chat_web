@@ -2,35 +2,36 @@ import { defineStore } from "pinia";
 import endpoints from "@/config/endpoints";
 import SimplePaginate from "@/utils/simplePaginate";
 import Message from "@/types/message";
+import RecentContactFriendData from "@/types/responses/socialite/friend/recentContactCursorPaginate";
 
 interface State {
-  messages: Message[];
-  simplePaginate: SimplePaginate<Message>;
+  data: RecentContactFriendData[];
+  simplePaginate: SimplePaginate<RecentContactFriendData>;
 }
 
 const useRecentContactFriendStore = defineStore("recentContactFriend", {
   state: (): State => ({
-    messages: [],
-    simplePaginate: new SimplePaginate<Message>(
+    data: [],
+    simplePaginate: new SimplePaginate<RecentContactFriendData>(
       endpoints.socialite.group.recentContactCursorPaginate
     ),
   }),
   actions: {
     clear() {
-      this.messages = [];
+      this.data = [];
     },
-    push(...messages: Message[]) {
-      this.messages.push(...messages);
+    push(...data: RecentContactFriendData[]) {
+      this.data.push(...data);
     },
-    unshift(...messages: Message[]) {
-      this.messages.unshift(...messages);
+    unshift(...data: RecentContactFriendData[]) {
+      this.data.unshift(...data);
     },
-    update(message: Message) {
-      const index = this.messages.findIndex(
-        (msg) => msg.group!.id === message.group!.id
+    update(data: RecentContactFriendData) {
+      const index = this.data.findIndex(
+        (d) => d.message.group_id === data.message.group_id
       );
-      if (index !== -1) this.messages.splice(index, 1);
-      this.messages.unshift(message);
+      if (index !== -1) this.data.splice(index, 1);
+      this.data.unshift(data);
     },
   },
 });

@@ -3,19 +3,18 @@ import Echo from "laravel-echo";
 import Pusher from "pusher-js";
 
 class EchoManager {
-  public static echo: Echo | null;
+  public static echo = EchoManager._build();
 
-  static connect() {
-    EchoManager.echo = new Echo({
+  private static _build() {
+    return new Echo({
       broadcaster: "pusher",
       client: new Pusher(config.appKey, config.options),
     });
-    return EchoManager.echo;
   }
 
-  static destroy() {
-    EchoManager.echo?.disconnect();
-    EchoManager.echo = null;
+  static rebuild() {
+    EchoManager.echo.disconnect();
+    EchoManager.echo = this._build();
   }
 }
 

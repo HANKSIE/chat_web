@@ -1,7 +1,6 @@
 import EventManager from "@/utils/eventManager";
 
 const listeners = [
-  import("./listeners/echo/connect"), // should call this first
   import("./listeners/removeAllListenerAndRegisterAgain"),
   import("./listeners/setAuthAndRedirectToDashboard"),
   import("./listeners/clearStoreAndRedirectToLogin"),

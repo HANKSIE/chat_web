@@ -1,6 +1,6 @@
 <template>
   <infinite-scroll
-    v-model="recentContactFriendStore.messages"
+    v-model="recentContactFriendStore.data"
     :simplePaginate="recentContactFriendStore.simplePaginate"
     :searchArgs="[1, 10]"
   >
@@ -8,7 +8,16 @@
       :units="units"
       @avatar-click="showProfile"
       @item-click="switchChatroom"
-    />
+    >
+      <template #list-item-side="{ unit }">
+        <q-badge
+          v-if="unit.unread > 0"
+          rounded
+          color="red"
+          :label="unit.unread"
+        />
+      </template>
+    </unit-list>
   </infinite-scroll>
 </template>
 
@@ -24,6 +33,10 @@ import EventManager from "@/utils/eventManager";
 import useChatroomStore from "@/stores/chatroom";
 import InfiniteScroll from "@/components/InfiniteScroll.vue";
 
+interface ChattableUnitWithUnread extends ChattableUnit {
+  unread: number;
+}
+
 export default {
   components: { UnitList, InfiniteScroll },
   setup() {
@@ -32,8 +45,9 @@ export default {
     const $q = useQuasar();
     const chatRoomStore = useChatroomStore();
 
-    const units = computed<ChattableUnit[]>(() =>
-      recentContactFriendStore.messages.map((message) => {
+    const units = computed<ChattableUnitWithUnread[]>(() =>
+      recentContactFriendStore.data.map((data) => {
+        const message = data.message;
         const friend = message.group!.members!.find(
           (user) => user.id !== auth.user?.id
         )!;
@@ -45,6 +59,7 @@ export default {
           group_id: message.group!.id,
           itemCaption: message.body,
           sideTopCaption: message.created_at,
+          unread: data.unread,
         };
       })
     );
