@@ -18,7 +18,7 @@
   <div v-else style="height: calc(100vh - 50px)" class="column">
     <q-scroll-area ref="scrollArea" class="q-px-md col-10">
       <q-infinite-scroll
-        ref="infiniteScroll"
+        ref="qInfiniteScroll"
         @load="loadTop"
         reverse
         :offset="10"
@@ -75,7 +75,7 @@ export default {
     const auth = useAuthStore();
     const text = ref("");
     const scrollArea = ref<QScrollArea>();
-    const infiniteScroll = ref<QInfiniteScroll | null>(null);
+    const qInfiniteScroll = ref<QInfiniteScroll | null>(null);
     const recentContactFriendStore = useRecentContactFriendStore();
 
     const scrollToBottom = () => {
@@ -88,19 +88,19 @@ export default {
       EventManager.EventType.RECEIVE_GROUP_MESSAGE,
       (message: Message) => {
         if (chatroomStore.unit?.group_id !== message.group_id) return;
-        chatroomStore.pushMessage(message);
+        chatroomStore.push(message);
         nextTick(() => scrollToBottom());
       }
     );
     EventManager.on(EventManager.EventType.SWITCH_CHATROOM, () => {
       scrollToBottom();
-      infiniteScroll.value?.resume();
+      qInfiniteScroll.value?.resume();
     });
     const loadTop = async (_: number, done: (val: boolean) => void) => {
       const messages = await (chatroomStore.messages.length === 0
         ? chatroomStore.search(10)
         : chatroomStore.loadTop());
-      chatroomStore.unshiftMessage(...messages);
+      chatroomStore.unshift(...messages);
       done(messages.length === 0);
     };
 
@@ -112,18 +112,13 @@ export default {
 
       const message = res.data.message;
       if (message) {
-        chatroomStore.pushMessage(message);
+        chatroomStore.push(message);
 
         if (message.group?.is_one_to_one)
           recentContactFriendStore.update({ message, unread: 0 });
 
         text.value = "";
-        nextTick(() =>
-          scrollArea.value?.setScrollPosition(
-            "vertical",
-            scrollArea.value.getScrollTarget().scrollHeight
-          )
-        );
+        nextTick(() => scrollToBottom());
       }
     };
 
@@ -134,7 +129,7 @@ export default {
       sendMessage,
       scrollArea,
       loadTop,
-      infiniteScroll,
+      qInfiniteScroll,
     };
   },
 };

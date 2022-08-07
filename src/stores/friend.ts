@@ -10,29 +10,29 @@ interface FriendSimplePaginateData {
 
 interface State {
   friends: FriendSimplePaginateData[];
-  simplePaginate: SimplePaginate<FriendSimplePaginateData>;
 }
+
+const simplePaginate = new SimplePaginate<FriendSimplePaginateData>(
+  endpoints.socialite.friend.simplePaginate
+);
 
 const useFriendStore = defineStore("friend", {
   state: (): State => ({
     friends: [],
-    simplePaginate: new SimplePaginate<FriendSimplePaginateData>(
-      endpoints.socialite.friend.simplePaginate
-    ),
   }),
   actions: {
-    clear() {
-      this.friends = [];
-    },
     push(...users: FriendSimplePaginateData[]) {
       this.friends.push(...users);
     },
     unshift(...users: FriendSimplePaginateData[]) {
       this.friends.unshift(...users);
     },
-    remove(id: number) {
+    removeById(id: number) {
       this.friends = this.friends.filter((friend) => friend.user.id !== id);
     },
+    search: async (perPage: number, keyword: string) =>
+      await simplePaginate.search(perPage, keyword),
+    next: simplePaginate.next,
   },
 });
 

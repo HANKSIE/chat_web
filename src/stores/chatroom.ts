@@ -22,10 +22,10 @@ const useChatroomStore = defineStore("chatroom", {
       this.messages = [];
       this.unit = unit || null;
     },
-    pushMessage(...messages: Message[]) {
+    push(...messages: Message[]) {
       this.messages.push(...messages.slice().reverse());
     },
-    unshiftMessage(...messages: Message[]) {
+    unshift(...messages: Message[]) {
       this.messages.unshift(...messages.slice().reverse());
     },
     search(perPage: number) {

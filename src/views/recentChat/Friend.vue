@@ -80,14 +80,12 @@ export default {
     const search = async () => {
       recentContactFriendStore.clear();
       recentContactFriendStore.push(
-        ...(await recentContactFriendStore.simplePaginate.search(1, 10))
+        ...(await recentContactFriendStore.search(1, 10))
       );
     };
 
     const next = async () =>
-      recentContactFriendStore.push(
-        ...(await recentContactFriendStore.simplePaginate.next())
-      );
+      recentContactFriendStore.push(...(await recentContactFriendStore.next()));
 
     return {
       units,

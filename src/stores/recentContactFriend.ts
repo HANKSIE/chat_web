@@ -1,20 +1,19 @@
 import { defineStore } from "pinia";
 import endpoints from "@/config/endpoints";
 import SimplePaginate from "@/utils/simplePaginate";
-import Message from "@/types/message";
 import RecentContactFriendData from "@/types/responses/socialite/friend/recentContactCursorPaginate";
 
 interface State {
   data: RecentContactFriendData[];
-  simplePaginate: SimplePaginate<RecentContactFriendData>;
 }
+
+const simplePaginate = new SimplePaginate<RecentContactFriendData>(
+  endpoints.socialite.group.recentContactCursorPaginate
+);
 
 const useRecentContactFriendStore = defineStore("recentContactFriend", {
   state: (): State => ({
     data: [],
-    simplePaginate: new SimplePaginate<RecentContactFriendData>(
-      endpoints.socialite.group.recentContactCursorPaginate
-    ),
   }),
   actions: {
     clear() {
@@ -33,6 +32,10 @@ const useRecentContactFriendStore = defineStore("recentContactFriend", {
       if (index !== -1) this.data.splice(index, 1);
       this.data.unshift(data);
     },
+    // isOneToOne: 0 => false, 1 => true
+    search: async (isOneToOne: number, perPage: number) =>
+      await simplePaginate.search(isOneToOne, perPage),
+    next: simplePaginate.next,
   },
 });
 

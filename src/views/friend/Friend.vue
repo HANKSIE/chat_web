@@ -74,7 +74,7 @@ export default {
             await api.socialite.friend.unfriend(unit.id);
             if (unit.group_id === chatroomStore.unit?.group_id)
               chatroomStore.init();
-            friendStore.remove(unit.id);
+            friendStore.removeById(unit.id);
           },
           message: `確定要將 <span class="ellipsis text-weight-bold" style="width: 250px">${unit.name}</span> 從好友清單移除嗎?`,
         },
@@ -82,17 +82,16 @@ export default {
     };
 
     const search = async () => {
-      const data = await friendStore.simplePaginate.search(10, keyword.value);
+      const data = await friendStore.search(10, keyword.value);
       friendStore.push(...data);
       return data.length === 0;
     };
 
     const next = async () => {
-      const data = await friendStore.simplePaginate.next();
+      const data = await friendStore.next();
       friendStore.push(...data);
       return data.length === 0;
     };
-
     return {
       units,
       showProfile,
