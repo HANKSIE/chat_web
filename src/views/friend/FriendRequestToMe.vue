@@ -1,9 +1,5 @@
 <template>
-  <infinite-scroll
-    v-model="senders"
-    :simplePaginate="cursorPaginate"
-    :searchArgs="[10]"
-  >
+  <searchable-infinite-scroll v-model="senders" :search="search" :next="next">
     <unit-list
       :units="units"
       @avatar-click="showProfile"
@@ -28,7 +24,7 @@
         </div>
       </template>
     </unit-list>
-  </infinite-scroll>
+  </searchable-infinite-scroll>
 </template>
 <script lang="ts">
 import { ref } from "@vue/reactivity";
@@ -41,14 +37,14 @@ import User from "@/types/user";
 import SimplePaginate from "@/utils/simplePaginate";
 import endpoints from "@/config/endpoints";
 import api from "@/utils/api";
-import InfiniteScroll from "@/components/InfiniteScroll.vue";
+import SearchableInfiniteScroll from "@/components/SearchableInfiniteScroll.vue";
 import { joinGroup } from "@/utils/socialite";
 export default {
-  components: { UnitList, InfiniteScroll },
+  components: { UnitList, SearchableInfiniteScroll },
   setup() {
     const $q = useQuasar();
     const senders = ref<User[]>([]);
-    const cursorPaginate = new SimplePaginate<User>(
+    const simplePaginate = new SimplePaginate<User>(
       endpoints.socialite.friend.request.toMe
     );
 
@@ -81,13 +77,20 @@ export default {
       await api.socialite.friend.request.deny(senderID);
       senders.value = senders.value.filter((user) => user.id !== senderID);
     };
+
+    const search = async () =>
+      (senders.value = [...(await simplePaginate.search(10))]);
+    const next = async () =>
+      (senders.value = [...senders.value, ...(await simplePaginate.next())]);
+
     return {
       units,
-      cursorPaginate,
       senders,
       showProfile,
       accept,
       deny,
+      search,
+      next,
     };
   },
 };

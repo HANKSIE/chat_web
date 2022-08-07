@@ -1,8 +1,8 @@
 <template>
-  <infinite-scroll
+  <searchable-infinite-scroll
     v-model="recentContactFriendStore.data"
-    :simplePaginate="recentContactFriendStore.simplePaginate"
-    :searchArgs="[1, 10]"
+    :search="search"
+    :next="next"
   >
     <unit-list
       :units="units"
@@ -18,7 +18,7 @@
         />
       </template>
     </unit-list>
-  </infinite-scroll>
+  </searchable-infinite-scroll>
 </template>
 
 <script lang="ts">
@@ -31,14 +31,14 @@ import { useQuasar } from "quasar";
 import UnitProfileDialog from "@/components/UnitProfileDialog.vue";
 import EventManager from "@/utils/eventManager";
 import useChatroomStore from "@/stores/chatroom";
-import InfiniteScroll from "@/components/InfiniteScroll.vue";
+import SearchableInfiniteScroll from "@/components/SearchableInfiniteScroll.vue";
 
 interface ChattableUnitWithUnread extends ChattableUnit {
   unread: number;
 }
 
 export default {
-  components: { UnitList, InfiniteScroll },
+  components: { UnitList, SearchableInfiniteScroll },
   setup() {
     const recentContactFriendStore = useRecentContactFriendStore();
     const auth = useAuthStore();
@@ -77,11 +77,25 @@ export default {
       EventManager.dispatch(EventManager.EventType.SWITCH_CHATROOM);
     };
 
+    const search = async () => {
+      recentContactFriendStore.clear();
+      recentContactFriendStore.push(
+        ...(await recentContactFriendStore.simplePaginate.search(1, 10))
+      );
+    };
+
+    const next = async () =>
+      recentContactFriendStore.push(
+        ...(await recentContactFriendStore.simplePaginate.next())
+      );
+
     return {
       units,
       showProfile,
       switchChatroom,
       recentContactFriendStore,
+      search,
+      next,
     };
   },
 };

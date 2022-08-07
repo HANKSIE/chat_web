@@ -1,8 +1,10 @@
 <template>
+  <search-input v-model="keyword" @search="searchableInfiniteScroll?.search" />
   <searchable-infinite-scroll
+    ref="searchableInfiniteScroll"
     v-model="userData"
-    :simplePaginate="simplePaginate"
-    :searchArgs="[10]"
+    :search="search"
+    :next="next"
     :loadAfterSearch="true"
   >
     <unit-list
@@ -43,6 +45,9 @@ import UnitProfileDialog from "@/components/UnitProfileDialog.vue";
 import api from "@/utils/api";
 import { joinGroup } from "@/utils/socialite";
 import SearchableInfiniteScroll from "@/components/SearchableInfiniteScroll.vue";
+import SearchInput from "@/components/SearchInput.vue";
+import ISearchableInfiniteScroll from "@/types/searchableInfiniteScroll";
+
 interface UserSimplePaginateData {
   user: User;
   status: number;
@@ -61,7 +66,7 @@ enum UserStatus {
 }
 
 export default {
-  components: { UnitList, SearchableInfiniteScroll },
+  components: { UnitList, SearchableInfiniteScroll, SearchInput },
   setup() {
     const keyword = ref("");
     const $q = useQuasar();
@@ -111,15 +116,33 @@ export default {
       joinGroup(res.data.group_id);
     };
 
+    const search = async () => {
+      const data = await simplePaginate.search(10, keyword.value);
+      userData.value = [...data];
+      return data.length === 0;
+    };
+
+    const next = async () => {
+      const data = await simplePaginate.next();
+      userData.value = [...userData.value, ...data];
+      return data.length === 0;
+    };
+
+    const searchableInfiniteScroll = ref<ISearchableInfiniteScroll | null>(
+      null
+    );
+
     return {
       keyword,
       units,
-      simplePaginate,
       showProfile,
       sendFriendRequest,
       acceptFriendRequest,
       UserStatus,
       userData,
+      search,
+      next,
+      searchableInfiniteScroll,
     };
   },
 };

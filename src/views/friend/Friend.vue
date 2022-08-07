@@ -1,8 +1,10 @@
 <template>
+  <search-input v-model="keyword" @search="searchableInfiniteScroll?.search" />
   <searchable-infinite-scroll
+    ref="searchableInfiniteScroll"
     v-model="friendStore.friends"
-    :simplePaginate="friendStore.simplePaginate"
-    :searchArgs="[10]"
+    :search="search"
+    :next="next"
   >
     <unit-list
       :units="units"
@@ -17,7 +19,7 @@
 </template>
 <script lang="ts">
 import UnitList from "@/components/UnitList.vue";
-import { computed } from "@vue/runtime-core";
+import { computed, ref } from "@vue/runtime-core";
 import useFriendStore from "@/stores/friend";
 import ChattableUnit from "@/types/chattableUnit";
 import { useQuasar } from "quasar";
@@ -27,15 +29,18 @@ import EventManager from "@/utils/eventManager";
 import api from "@/utils/api";
 import SearchableInfiniteScroll from "@/components/SearchableInfiniteScroll.vue";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
-
+import SearchInput from "@/components/SearchInput.vue";
+import ISearchableInfiniteScroll from "@/types/searchableInfiniteScroll";
 export default {
-  components: { UnitList, SearchableInfiniteScroll },
+  components: { UnitList, SearchableInfiniteScroll, SearchInput },
   setup() {
     const friendStore = useFriendStore();
-
+    const keyword = ref("");
     const $q = useQuasar();
     const chatroomStore = useChatroomStore();
-
+    const searchableInfiniteScroll = ref<ISearchableInfiniteScroll | null>(
+      null
+    );
     const units = computed<ChattableUnit[]>(() =>
       friendStore.friends.map((val) => {
         const { id, name, avatar_url } = val.user;
@@ -76,12 +81,28 @@ export default {
       });
     };
 
+    const search = async () => {
+      const data = await friendStore.simplePaginate.search(10, keyword.value);
+      friendStore.push(...data);
+      return data.length === 0;
+    };
+
+    const next = async () => {
+      const data = await friendStore.simplePaginate.next();
+      friendStore.push(...data);
+      return data.length === 0;
+    };
+
     return {
       units,
       showProfile,
       switchChatroom,
       unfriend,
       friendStore,
+      keyword,
+      search,
+      next,
+      searchableInfiniteScroll,
     };
   },
 };

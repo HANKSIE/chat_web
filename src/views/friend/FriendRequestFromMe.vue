@@ -1,8 +1,8 @@
 <template>
-  <infinite-scroll
+  <searchable-infinite-scroll
     v-model="recipients"
-    :simplePaginate="cursorPaginate"
-    :searchArgs="[10]"
+    :search="search"
+    :next="next"
   >
     <unit-list
       :units="units"
@@ -13,7 +13,7 @@
         <q-btn dense flat label="收回" @click="revoke(unit)" />
       </template>
     </unit-list>
-  </infinite-scroll>
+  </searchable-infinite-scroll>
 </template>
 <script lang="ts">
 import { ref } from "@vue/reactivity";
@@ -26,14 +26,14 @@ import User from "@/types/user";
 import SimplePaginate from "@/utils/simplePaginate";
 import endpoints from "@/config/endpoints";
 import api from "@/utils/api";
-import InfiniteScroll from "@/components/InfiniteScroll.vue";
+import SearchableInfiniteScroll from "@/components/SearchableInfiniteScroll.vue";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
 export default {
-  components: { UnitList, InfiniteScroll },
+  components: { UnitList, SearchableInfiniteScroll },
   setup() {
     const $q = useQuasar();
     const recipients = ref<User[]>([]);
-    const cursorPaginate = new SimplePaginate<User>(
+    const simplePaginate = new SimplePaginate<User>(
       endpoints.socialite.friend.request.fromMe
     );
 
@@ -68,12 +68,22 @@ export default {
         },
       });
     };
+
+    const search = async () =>
+      (recipients.value = [...(await simplePaginate.search(10))]);
+    const next = async () =>
+      (recipients.value = [
+        ...recipients.value,
+        ...(await simplePaginate.next()),
+      ]);
+
     return {
       units,
-      cursorPaginate,
       recipients,
       showProfile,
       revoke,
+      search,
+      next,
     };
   },
 };
