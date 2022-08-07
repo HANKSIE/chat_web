@@ -13,6 +13,7 @@ export default {
       message: {
         simplePaginate: "messages/search",
         restApi: "messages",
+        markAsRead: "message/mark-as-read",
       },
       recentContactCursorPaginate: "groups/recent-contact",
     },

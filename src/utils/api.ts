@@ -73,6 +73,9 @@ const api = {
             body,
           });
         },
+        markAsRead(group_id: number): Promise<AxiosResponse<void>> {
+          return http.put(socialite.group.message.markAsRead, { group_id });
+        },
       },
     },
     friend: {

@@ -29,9 +29,8 @@ import useAuthStore from "@/stores/auth";
 import ChattableUnit from "@/types/chattableUnit";
 import { useQuasar } from "quasar";
 import UnitProfileDialog from "@/components/UnitProfileDialog.vue";
-import EventManager from "@/utils/eventManager";
-import useChatroomStore from "@/stores/chatroom";
 import SearchableInfiniteScroll from "@/components/SearchableInfiniteScroll.vue";
+import { switchChatroom } from "@/utils/socialite";
 
 interface ChattableUnitWithUnread extends ChattableUnit {
   unread: number;
@@ -43,7 +42,6 @@ export default {
     const recentContactFriendStore = useRecentContactFriendStore();
     const auth = useAuthStore();
     const $q = useQuasar();
-    const chatRoomStore = useChatroomStore();
 
     const units = computed<ChattableUnitWithUnread[]>(() =>
       recentContactFriendStore.data.map((data) => {
@@ -60,6 +58,7 @@ export default {
           itemCaption: message.body,
           sideTopCaption: message.created_at,
           unread: data.unread,
+          is_one_to_one: true,
         };
       })
     );
@@ -71,11 +70,6 @@ export default {
           unit,
         },
       });
-
-    const switchChatroom = (unit: ChattableUnit) => {
-      chatRoomStore.init(unit);
-      EventManager.dispatch(EventManager.EventType.SWITCH_CHATROOM);
-    };
 
     const search = async () => {
       recentContactFriendStore.clear();

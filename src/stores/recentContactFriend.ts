@@ -36,6 +36,10 @@ const useRecentContactFriendStore = defineStore("recentContactFriend", {
     search: async (isOneToOne: number, perPage: number) =>
       await simplePaginate.search(isOneToOne, perPage),
     next: simplePaginate.next,
+    markAsRead(groupID: number) {
+      const data = this.data.find((d) => d.message.group_id === groupID);
+      if (data !== null) data!.unread = 0;
+    },
   },
 });
 

@@ -9,7 +9,7 @@ import EventManager from "./eventManager";
 export const switchChatroom = (unit: ChattableUnit) => {
   const chatRoomStore = useChatroomStore();
   chatRoomStore.init(unit);
-  EventManager.dispatch(EventManager.EventType.SWITCH_CHATROOM);
+  EventManager.dispatch(EventManager.EventType.SWITCH_CHATROOM, unit);
 };
 
 export const joinGroup = (groupID: number) => {

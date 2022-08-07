@@ -25,12 +25,12 @@ import ChattableUnit from "@/types/chattableUnit";
 import { useQuasar } from "quasar";
 import UnitProfileDialog from "@/components/UnitProfileDialog.vue";
 import useChatroomStore from "@/stores/chatroom";
-import EventManager from "@/utils/eventManager";
 import api from "@/utils/api";
 import SearchableInfiniteScroll from "@/components/SearchableInfiniteScroll.vue";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import SearchInput from "@/components/SearchInput.vue";
 import ISearchableInfiniteScroll from "@/types/searchableInfiniteScroll";
+import { switchChatroom } from "@/utils/socialite";
 export default {
   components: { UnitList, SearchableInfiniteScroll, SearchInput },
   setup() {
@@ -49,6 +49,7 @@ export default {
           name,
           avatar_url,
           group_id: val.group_id,
+          is_one_to_one: true,
         };
       })
     );
@@ -60,11 +61,6 @@ export default {
           unit,
         },
       });
-
-    const switchChatroom = (unit: ChattableUnit) => {
-      chatroomStore.init(unit);
-      EventManager.dispatch(EventManager.EventType.SWITCH_CHATROOM);
-    };
 
     const unfriend = (unit: ChattableUnit) => {
       $q.dialog({

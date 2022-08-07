@@ -8,6 +8,7 @@ const listeners = [
   import("./listeners/echo/leaveGroups"),
   import("./listeners/echo/listenUserChannel"),
   import("./listeners/updateRecentFriend"),
+  import("./listeners/markAsRead"),
 ];
 
 export default async () => {
