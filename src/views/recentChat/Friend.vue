@@ -72,14 +72,16 @@ export default {
       });
 
     const search = async () => {
-      recentContactFriendStore.clear();
-      recentContactFriendStore.push(
-        ...(await recentContactFriendStore.search(1, 10))
-      );
+      const data = await recentContactFriendStore.search(1, 10);
+      recentContactFriendStore.push(...data);
+      return data.length === 0;
     };
 
-    const next = async () =>
-      recentContactFriendStore.push(...(await recentContactFriendStore.next()));
+    const next = async () => {
+      const data = await recentContactFriendStore.next();
+      recentContactFriendStore.push(...data);
+      return data.length === 0;
+    };
 
     return {
       units,

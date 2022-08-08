@@ -78,10 +78,17 @@ export default {
       senders.value = senders.value.filter((user) => user.id !== senderID);
     };
 
-    const search = async () =>
-      (senders.value = [...(await simplePaginate.search(10))]);
-    const next = async () =>
-      (senders.value = [...senders.value, ...(await simplePaginate.next())]);
+    const search = async () => {
+      const data = await simplePaginate.search(10);
+      senders.value = [...data];
+      return data.length === 0;
+    };
+
+    const next = async () => {
+      const data = await simplePaginate.next();
+      senders.value = [...senders.value, ...data];
+      return data.length === 0;
+    };
 
     return {
       units,

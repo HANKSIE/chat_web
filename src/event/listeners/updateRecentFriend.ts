@@ -15,9 +15,10 @@ const listener: Listener = {
       useChatroomStore().unit?.group_id === message.group_id;
     const isMe = message.user.id === useAuthStore().user?.id;
     if (message.group?.is_one_to_one) {
-      const unread = recentContactFriendStore.data.find(
+      const record = recentContactFriendStore.data.find(
         (data) => data.message.group_id === message.group_id
-      )!.unread;
+      );
+      const unread = record ? record.unread : 0;
 
       recentContactFriendStore.update({
         message,

@@ -38,7 +38,7 @@ const useRecentContactFriendStore = defineStore("recentContactFriend", {
     next: simplePaginate.next,
     markAsRead(groupID: number) {
       const data = this.data.find((d) => d.message.group_id === groupID);
-      if (data !== null) data!.unread = 0;
+      if (data) data!.unread = 0;
     },
   },
 });

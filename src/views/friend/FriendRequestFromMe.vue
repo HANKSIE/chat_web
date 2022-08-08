@@ -69,13 +69,17 @@ export default {
       });
     };
 
-    const search = async () =>
-      (recipients.value = [...(await simplePaginate.search(10))]);
-    const next = async () =>
-      (recipients.value = [
-        ...recipients.value,
-        ...(await simplePaginate.next()),
-      ]);
+    const search = async () => {
+      const data = await simplePaginate.search(10);
+      recipients.value = [...data];
+      return data.length === 0;
+    };
+
+    const next = async () => {
+      const data = await simplePaginate.next();
+      recipients.value = [...recipients.value, ...data];
+      return data.length === 0;
+    };
 
     return {
       units,
