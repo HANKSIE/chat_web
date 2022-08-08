@@ -59,6 +59,24 @@ const api = {
       > {
         return http.get(socialite.group.allIDs);
       },
+      message: {
+        send(
+          group_id: number,
+          body: string
+        ): Promise<
+          AxiosResponse<{
+            message: Message | null;
+          }>
+        > {
+          return http.post(socialite.group.message.restApi(group_id), {
+            group_id,
+            body,
+          });
+        },
+        markAsRead(groupID: number): Promise<AxiosResponse<void>> {
+          return http.put(socialite.group.message.markAsRead(groupID));
+        },
+      },
     },
     friend: {
       request: {
@@ -83,24 +101,6 @@ const api = {
       },
       unfriend(friend_id: number): Promise<AxiosResponse<void>> {
         return http.delete(socialite.friend.unfriend, { data: { friend_id } });
-      },
-    },
-    message: {
-      send(
-        group_id: number,
-        body: string
-      ): Promise<
-        AxiosResponse<{
-          message: Message | null;
-        }>
-      > {
-        return http.post(socialite.message.restApi, {
-          group_id,
-          body,
-        });
-      },
-      markAsRead(group_id: number): Promise<AxiosResponse<void>> {
-        return http.put(socialite.message.markAsRead, { group_id });
       },
     },
   },

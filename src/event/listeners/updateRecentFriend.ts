@@ -24,7 +24,7 @@ const listener: Listener = {
         unread: isCurrentChatroom || isMe ? 0 : unread + 1,
       });
       if (!isMe && isCurrentChatroom)
-        api.socialite.message.markAsRead(message.group_id);
+        api.socialite.group.message.markAsRead(message.group_id);
     }
   },
 };

@@ -105,7 +105,7 @@ export default {
     };
 
     const sendMessage = async () => {
-      const res = await api.socialite.message.send(
+      const res = await api.socialite.group.message.send(
         chatroomStore.unit!.group_id,
         text.value
       );

@@ -10,8 +10,15 @@ export default {
   socialite: {
     group: {
       allIDs: "groups",
-
       recentContactCursorPaginate: "groups/recent-contact",
+      message: {
+        simplePaginate: (groupID: number) => `group/${groupID}/messages/search`,
+        restApi: (groupID: number) => `group/${groupID}/messages`,
+        markAsRead: (groupID: number) =>
+          `group/${groupID}/message/mark-as-read`,
+        cursorPaginate: (groupID: number) =>
+          `group/${groupID}/messages/paginate`,
+      },
     },
     friend: {
       simplePaginate: "friends/search",
@@ -25,11 +32,7 @@ export default {
       },
       unfriend: "friends",
     },
-    message: {
-      simplePaginate: "messages/search",
-      restApi: "messages",
-      markAsRead: "message/mark-as-read",
-    },
+
     user: {
       simplePaginate: "users/search",
     },
