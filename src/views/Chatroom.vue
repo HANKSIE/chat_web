@@ -67,6 +67,7 @@ import Message from "@/types/message";
 import { QInfiniteScroll, QScrollArea } from "quasar";
 import { nextTick } from "vue";
 import useRecentContactFriendStore from "@/stores/recentContactFriend";
+import { isCurrentChatroom } from "@/utils/socialite";
 
 export default {
   components: { Avatar },
@@ -87,7 +88,7 @@ export default {
     EventManager.on(
       EventManager.EventType.RECEIVE_GROUP_MESSAGE,
       (message: Message) => {
-        if (chatroomStore.unit?.group_id !== message.group_id) return;
+        if (!isCurrentChatroom(message.group_id)) return;
         chatroomStore.push(message);
         nextTick(() => scrollToBottom());
       }

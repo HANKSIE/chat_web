@@ -1,5 +1,7 @@
+import useAuthStore from "@/stores/auth";
 import ChattableUnit from "@/types/chattableUnit";
 import Message from "@/types/message";
+import MessageRead from "@/types/messageRead";
 import User from "@/types/user";
 
 import useChatroomStore from "../stores/chatroom";
@@ -29,9 +31,19 @@ export const joinGroup = (groupID: number) => {
         EventManager.EventType.RECEIVE_GROUP_MESSAGE,
         data.message
       )
+    )
+    .listen(".mark-as-read", (data: { messageRead: MessageRead }) =>
+      EventManager.dispatch(
+        EventManager.EventType.MEMBER_MARK_AS_READ,
+        data.messageRead
+      )
     );
 };
 
 export const leaveGroup = (groupID: number) => {
   EchoManager.echo?.leave(`group.${groupID}`);
 };
+
+export const isCurrentChatroom = (groupID: number) =>
+  useChatroomStore().unit?.group_id === groupID;
+export const isMe = (userID: number) => userID === useAuthStore().user?.id;

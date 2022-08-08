@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 import endpoints from "@/config/endpoints";
 import SimplePaginate from "@/utils/simplePaginate";
 import RecentContactFriendData from "@/types/responses/socialite/friend/recentContactCursorPaginate";
+import EventManager from "@/utils/eventManager";
+import api from "@/utils/api";
 
 interface State {
   data: RecentContactFriendData[];
@@ -36,7 +38,8 @@ const useRecentContactFriendStore = defineStore("recentContactFriend", {
     search: async (isOneToOne: number, perPage: number) =>
       await simplePaginate.search(isOneToOne, perPage),
     next: simplePaginate.next,
-    markAsRead(groupID: number) {
+    async markAsRead(groupID: number) {
+      await api.socialite.group.message.markAsRead(groupID);
       const data = this.data.find((d) => d.message.group_id === groupID);
       if (data) data!.unread = 0;
     },
