@@ -4,6 +4,7 @@ import { AxiosResponse } from "axios";
 import endpoints from "@/config/endpoints";
 import SimplePaginate from "@/types/simplePaginate";
 import Message from "@/types/message";
+import MessageRead from "@/types/messageRead";
 const { auth, socialite } = endpoints;
 
 const simplePaginate =
@@ -28,93 +29,78 @@ const api = {
       formData.append("password_confirmation", password_confirmation);
       return http.post(auth.register, formData);
     },
-    login(
+    login: (
       email: string,
       password: string
-    ): Promise<AxiosResponse<LoginResponse>> {
-      return http.post(auth.login, { email, password });
-    },
-    logout(): Promise<AxiosResponse<void>> {
-      return http.post(auth.logout);
-    },
-    loadUser(): Promise<AxiosResponse<LoginResponse>> {
-      return http.get(auth.user);
-    },
-    broadcast(
+    ): Promise<AxiosResponse<LoginResponse>> =>
+      http.post(auth.login, { email, password }),
+    logout: (): Promise<AxiosResponse<void>> => http.post(auth.logout),
+    loadUser: (): Promise<AxiosResponse<LoginResponse>> => http.get(auth.user),
+    broadcast: (
       socketID: string,
       channelName: string
-    ): Promise<AxiosResponse<BroadcastAuthResponse>> {
-      return http.post(auth.broadcast, {
+    ): Promise<AxiosResponse<BroadcastAuthResponse>> =>
+      http.post(auth.broadcast, {
         socket_id: socketID,
         channel_name: channelName,
-      });
-    },
+      }),
   },
   socialite: {
     group: {
-      loadAllIDs(): Promise<
+      loadAllIDs: (): Promise<
         AxiosResponse<{
           groups: number[];
         }>
-      > {
-        return http.get(socialite.group.allIDs);
-      },
+      > => http.get(socialite.group.allIDs),
       message: {
-        send(
+        send: (
           group_id: number,
           body: string
         ): Promise<
           AxiosResponse<{
             message: Message | null;
           }>
-        > {
-          return http.post(socialite.group.message.restApi(group_id), {
+        > =>
+          http.post(socialite.group.message.restApi(group_id), {
             group_id,
             body,
-          });
-        },
-        markAsRead(groupID: number): Promise<AxiosResponse<void>> {
-          return http.put(socialite.group.message.markAsRead(groupID));
-        },
+          }),
+        markAsRead: (groupID: number): Promise<AxiosResponse<void>> =>
+          http.put(socialite.group.message.markAsRead(groupID)),
       },
+      readList: (groupID: number): Promise<MessageRead[]> =>
+        http.get(socialite.group.readList(groupID)),
     },
     friend: {
       request: {
-        send(
+        send: (
           recipient_id: number
-        ): Promise<AxiosResponse<{ be_friend: boolean; group_id?: number }>> {
-          return http.post(socialite.friend.request.send, { recipient_id });
-        },
-        accept(
+        ): Promise<AxiosResponse<{ be_friend: boolean; group_id?: number }>> =>
+          http.post(socialite.friend.request.send, { recipient_id }),
+        accept: (
           sender_id: number
-        ): Promise<AxiosResponse<{ group_id: number }>> {
-          return http.post(socialite.friend.request.accept, { sender_id });
-        },
-        deny(sender_id: number): Promise<AxiosResponse<void>> {
-          return http.post(socialite.friend.request.deny, { sender_id });
-        },
-        revoke(recipient_id: number) {
-          return http.delete(socialite.friend.request.revoke, {
+        ): Promise<AxiosResponse<{ group_id: number }>> =>
+          http.post(socialite.friend.request.accept, { sender_id }),
+        deny: (sender_id: number): Promise<AxiosResponse<void>> =>
+          http.post(socialite.friend.request.deny, { sender_id }),
+        revoke: (recipient_id: number): Promise<AxiosResponse<void>> =>
+          http.delete(socialite.friend.request.revoke, {
             data: { recipient_id },
-          });
-        },
+          }),
       },
-      unfriend(friend_id: number): Promise<AxiosResponse<void>> {
-        return http.delete(socialite.friend.unfriend, { data: { friend_id } });
-      },
+      unfriend: (friend_id: number): Promise<AxiosResponse<void>> =>
+        http.delete(socialite.friend.unfriend, { data: { friend_id } }),
     },
   },
   common: {
     simplePaginate: {
-      init<T>(
+      init: <T>(
         url: string,
         ...args: any[]
-      ): Promise<AxiosResponse<SimplePaginate<T>>> {
-        return simplePaginate<T>(url)(...args);
-      },
-      page<T>(pageUrl: string): Promise<AxiosResponse<SimplePaginate<T>>> {
-        return http.get(pageUrl);
-      },
+      ): Promise<AxiosResponse<SimplePaginate<T>>> =>
+        simplePaginate<T>(url)(...args),
+      page: <T>(pageUrl: string): Promise<AxiosResponse<SimplePaginate<T>>> =>
+        http.get(pageUrl),
     },
   },
 };

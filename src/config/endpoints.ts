@@ -19,6 +19,7 @@ export default {
         cursorPaginate: (groupID: number) =>
           `group/${groupID}/messages/paginate`,
       },
+      readList: (groupID: number) => `group/${groupID}/message-reads`,
     },
     friend: {
       simplePaginate: "friends/search",
