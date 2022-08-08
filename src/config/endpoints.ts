@@ -10,11 +10,7 @@ export default {
   socialite: {
     group: {
       allIDs: "groups",
-      message: {
-        simplePaginate: "messages/search",
-        restApi: "messages",
-        markAsRead: "message/mark-as-read",
-      },
+
       recentContactCursorPaginate: "groups/recent-contact",
     },
     friend: {
@@ -28,6 +24,11 @@ export default {
         revoke: "friends/request/revoke",
       },
       unfriend: "friends",
+    },
+    message: {
+      simplePaginate: "messages/search",
+      restApi: "messages",
+      markAsRead: "message/mark-as-read",
     },
     user: {
       simplePaginate: "users/search",

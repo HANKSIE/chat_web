@@ -7,7 +7,7 @@ import api from "@/utils/api";
 const listener: Listener = {
   event: EventType.SWITCH_CHATROOM,
   handle: async (unit: ChattableUnit) => {
-    await api.socialite.group.message.markAsRead(unit.group_id);
+    await api.socialite.message.markAsRead(unit.group_id);
     if (unit.is_one_to_one)
       useRecentContactFriendStore().markAsRead(unit.group_id);
   },

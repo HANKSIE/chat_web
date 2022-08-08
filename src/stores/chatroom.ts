@@ -9,7 +9,7 @@ interface State {
 }
 
 const simplePaginate = new SimplePaginate<Message>(
-  endpoints.socialite.group.message.simplePaginate
+  endpoints.socialite.message.simplePaginate
 );
 
 const useChatroomStore = defineStore("chatroom", {
