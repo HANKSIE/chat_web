@@ -24,11 +24,6 @@
               好友
             </q-tooltip>
           </q-tab>
-          <q-tab name="group" icon="group">
-            <q-tooltip anchor="center right" self="center left">
-              群組
-            </q-tooltip>
-          </q-tab>
           <q-space />
         </q-tabs>
         <div class="col-1 row justify-center">
@@ -56,7 +51,6 @@
           <recent-chat-panel />
         </q-tab-panel>
         <q-tab-panel name="friend"> <friend-panel /> </q-tab-panel>
-        <q-tab-panel name="group"> group </q-tab-panel>
         <q-tab-panel name="profile"><profile-panel :user="user" /></q-tab-panel>
       </q-tab-panels>
     </template>
