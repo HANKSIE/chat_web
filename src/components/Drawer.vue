@@ -63,7 +63,7 @@ import EventManager from "@/utils/eventManager";
 import { ref } from "@vue/reactivity";
 import FriendPanel from "@/views/Friend/Index.vue";
 import ProfilePanel from "@/views/Profile.vue";
-import RecentChatPanel from "@/views/recentChat/Index.vue";
+import RecentChatPanel from "@/views/recentChat/Friend.vue";
 export default {
   components: { ProfilePanel, FriendPanel, RecentChatPanel },
   setup() {

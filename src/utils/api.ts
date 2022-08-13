@@ -2,15 +2,16 @@ import http from "@/utils/http";
 import { BroadcastAuthResponse, LoginResponse } from "@/types/responses/auth";
 import { AxiosResponse } from "axios";
 import endpoints from "@/config/endpoints";
-import SimplePaginate from "@/types/simplePaginate";
+import Paginate from "@/types/paginate";
 import Message from "@/types/message";
 import MessageRead from "@/types/messageRead";
+import Dict from "@/types/dict";
 const { auth, socialite } = endpoints;
 
-const simplePaginate =
+const paginate =
   <T>(url: string) =>
-  (...args: any[]): Promise<AxiosResponse<SimplePaginate<T>>> =>
-    http.get(`${url}/${args.join("/")}`);
+  (args: Dict<any>): Promise<AxiosResponse<Paginate<T>>> =>
+    http.get(`${url}?${new URLSearchParams(args)}`);
 
 const api = {
   auth: {
@@ -95,13 +96,12 @@ const api = {
     },
   },
   common: {
-    simplePaginate: {
+    paginate: {
       init: <T>(
         url: string,
-        ...args: any[]
-      ): Promise<AxiosResponse<SimplePaginate<T>>> =>
-        simplePaginate<T>(url)(...args),
-      page: <T>(pageUrl: string): Promise<AxiosResponse<SimplePaginate<T>>> =>
+        args: Dict<any>
+      ): Promise<AxiosResponse<Paginate<T>>> => paginate<T>(url)(args),
+      page: <T>(pageUrl: string): Promise<AxiosResponse<Paginate<T>>> =>
         http.get(pageUrl),
     },
   },

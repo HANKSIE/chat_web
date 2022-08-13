@@ -10,32 +10,31 @@ export default {
   socialite: {
     group: {
       allIDs: "groups",
-      recentContactCursorPaginate: "groups/recent-contact",
+      recentContactPaginate: "groups/recent-contact/search",
       message: {
-        simplePaginate: (groupID: number) => `group/${groupID}/messages/search`,
+        paginate: (groupID: number) => `group/${groupID}/messages/search`,
         restApi: (groupID: number) => `group/${groupID}/messages`,
         markAsRead: (groupID: number) =>
           `group/${groupID}/message/mark-as-read`,
-        cursorPaginate: (groupID: number) =>
-          `group/${groupID}/messages/paginate`,
       },
       messageReads: (groupID: number) => `group/${groupID}/message-reads`,
     },
     friend: {
-      simplePaginate: "friends/search",
+      paginate: "friends/search",
       request: {
         send: "friends/request/send",
         accept: "friends/request/accept",
         deny: "friends/request/deny",
-        toMe: "friends/requests/receive",
-        fromMe: "friends/requests/sent",
         revoke: "friends/request/revoke",
       },
       unfriend: "friends",
+      requests: {
+        paginate: "friends/requests/search",
+      },
     },
 
     user: {
-      simplePaginate: "users/search",
+      paginate: "users/search",
     },
   },
 };

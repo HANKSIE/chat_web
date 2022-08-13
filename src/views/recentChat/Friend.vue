@@ -1,4 +1,6 @@
 <template>
+  <div class="row justify-center text-h6">最近的聊天</div>
+  <q-separator class="q-my-md" />
   <searchable-infinite-scroll
     v-model="recentContactFriendStore.data"
     :search="search"

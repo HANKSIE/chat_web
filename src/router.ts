@@ -42,6 +42,10 @@ const routes: RouteRecordRaw[] = [
     path: "/:pathMatch(.*)",
     component: NotFound,
   },
+  {
+    path: "/",
+    redirect: { name: "login" },
+  },
 ];
 
 const router = createRouter({

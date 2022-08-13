@@ -1,16 +1,15 @@
 import { defineStore } from "pinia";
 import endpoints from "@/config/endpoints";
-import SimplePaginate from "@/utils/simplePaginate";
-import RecentContactFriendData from "@/types/responses/socialite/friend/recentContactCursorPaginate";
-import EventManager from "@/utils/eventManager";
+import Paginate from "@/utils/paginate";
+import RecentContactPaginateData from "@/types/responses/socialite/recentContactPaginateData";
 import api from "@/utils/api";
 
 interface State {
-  data: RecentContactFriendData[];
+  data: RecentContactPaginateData[];
 }
 
-const simplePaginate = new SimplePaginate<RecentContactFriendData>(
-  endpoints.socialite.group.recentContactCursorPaginate
+const paginate = new Paginate<RecentContactPaginateData>(
+  endpoints.socialite.group.recentContactPaginate
 );
 
 const useRecentContactFriendStore = defineStore("recentContactFriend", {
@@ -21,23 +20,22 @@ const useRecentContactFriendStore = defineStore("recentContactFriend", {
     clear() {
       this.data = [];
     },
-    push(...data: RecentContactFriendData[]) {
+    push(...data: RecentContactPaginateData[]) {
       this.data.push(...data);
     },
-    unshift(...data: RecentContactFriendData[]) {
+    unshift(...data: RecentContactPaginateData[]) {
       this.data.unshift(...data);
     },
-    update(data: RecentContactFriendData) {
+    update(data: RecentContactPaginateData) {
       const index = this.data.findIndex(
         (d) => d.message.group_id === data.message.group_id
       );
       if (index !== -1) this.data.splice(index, 1);
       this.data.unshift(data);
     },
-    // isOneToOne: 0 => false, 1 => true
-    search: async (isOneToOne: number, perPage: number) =>
-      await simplePaginate.search(isOneToOne, perPage),
-    next: simplePaginate.next,
+    search: async (isOneToOne: boolean, perPage: number) =>
+      await paginate.search({ is_one_to_one: isOneToOne, per_page: perPage }),
+    next: paginate.next,
     async markAsRead(groupID: number) {
       await api.socialite.group.message.markAsRead(groupID);
       const data = this.data.find((d) => d.message.group_id === groupID);

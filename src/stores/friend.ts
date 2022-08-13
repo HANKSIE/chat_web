@@ -1,19 +1,19 @@
 import { defineStore } from "pinia";
 import endpoints from "@/config/endpoints";
-import SimplePaginate from "@/utils/simplePaginate";
+import Paginate from "@/utils/Paginate";
 import User from "@/types/user";
 
-interface FriendSimplePaginateData {
+interface FriendPaginateData {
   user: User;
   group_id: number;
 }
 
 interface State {
-  friends: FriendSimplePaginateData[];
+  friends: FriendPaginateData[];
 }
 
-const simplePaginate = new SimplePaginate<FriendSimplePaginateData>(
-  endpoints.socialite.friend.simplePaginate
+const paginate = new Paginate<FriendPaginateData>(
+  endpoints.socialite.friend.paginate
 );
 
 const useFriendStore = defineStore("friend", {
@@ -21,18 +21,18 @@ const useFriendStore = defineStore("friend", {
     friends: [],
   }),
   actions: {
-    push(...users: FriendSimplePaginateData[]) {
+    push(...users: FriendPaginateData[]) {
       this.friends.push(...users);
     },
-    unshift(...users: FriendSimplePaginateData[]) {
+    unshift(...users: FriendPaginateData[]) {
       this.friends.unshift(...users);
     },
     removeById(id: number) {
       this.friends = this.friends.filter((friend) => friend.user.id !== id);
     },
     search: async (perPage: number, keyword: string) =>
-      await simplePaginate.search(perPage, keyword),
-    next: simplePaginate.next,
+      await paginate.search({ q: keyword, per_page: perPage }),
+    next: paginate.next,
   },
 });
 

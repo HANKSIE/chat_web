@@ -23,7 +23,7 @@ import { useQuasar } from "quasar";
 import UnitProfileDialog from "@/components/UnitProfileDialog.vue";
 import Unit from "@/types/unit";
 import User from "@/types/user";
-import SimplePaginate from "@/utils/simplePaginate";
+import Paginate from "@/utils/paginate";
 import endpoints from "@/config/endpoints";
 import api from "@/utils/api";
 import SearchableInfiniteScroll from "@/components/SearchableInfiniteScroll.vue";
@@ -33,8 +33,8 @@ export default {
   setup() {
     const $q = useQuasar();
     const recipients = ref<User[]>([]);
-    const simplePaginate = new SimplePaginate<User>(
-      endpoints.socialite.friend.request.fromMe
+    const paginate = new Paginate<User>(
+      endpoints.socialite.friend.requests.paginate
     );
 
     const units = computed<Unit[]>(() =>
@@ -70,13 +70,13 @@ export default {
     };
 
     const search = async () => {
-      const data = await simplePaginate.search(10);
+      const data = await paginate.search({ type: "receive", per_page: 10 });
       recipients.value = [...data];
       return data.length === 0;
     };
 
     const next = async () => {
-      const data = await simplePaginate.next();
+      const data = await paginate.next();
       recipients.value = [...recipients.value, ...data];
       return data.length === 0;
     };

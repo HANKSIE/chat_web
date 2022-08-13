@@ -38,7 +38,7 @@ import UnitList from "@/components/UnitList.vue";
 import { computed } from "@vue/runtime-core";
 import Unit from "@/types/unit";
 import User from "@/types/user";
-import SimplePaginate from "@/utils/simplePaginate";
+import Paginate from "@/utils/paginate";
 import endpoints from "@/config/endpoints";
 import { useQuasar } from "quasar";
 import UnitProfileDialog from "@/components/UnitProfileDialog.vue";
@@ -48,7 +48,7 @@ import SearchableInfiniteScroll from "@/components/SearchableInfiniteScroll.vue"
 import SearchInput from "@/components/SearchInput.vue";
 import ISearchableInfiniteScroll from "@/types/searchableInfiniteScroll";
 
-interface UserSimplePaginateData {
+interface UserPaginateData {
   user: User;
   status: number;
 }
@@ -70,10 +70,10 @@ export default {
   setup() {
     const keyword = ref("");
     const $q = useQuasar();
-    const simplePaginate = new SimplePaginate<UserSimplePaginateData>(
-      endpoints.socialite.user.simplePaginate
+    const paginate = new Paginate<UserPaginateData>(
+      endpoints.socialite.user.paginate
     );
-    const userData = ref<UserSimplePaginateData[]>([]);
+    const userData = ref<UserPaginateData[]>([]);
 
     const units = computed<FindNewFriendUnit[]>(() =>
       userData.value.map((val) => {
@@ -117,13 +117,13 @@ export default {
     };
 
     const search = async () => {
-      const data = await simplePaginate.search(10, keyword.value);
+      const data = await paginate.search({ q: keyword.value, per_page: 10 });
       userData.value = [...data];
       return data.length === 0;
     };
 
     const next = async () => {
-      const data = await simplePaginate.next();
+      const data = await paginate.next();
       userData.value = [...userData.value, ...data];
       return data.length === 0;
     };

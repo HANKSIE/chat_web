@@ -1,14 +1,15 @@
+import Dict from "@/types/dict";
 import api from "@/utils/api";
 
-class SimplePaginate<T> {
+class Paginate<T> {
   private _prevPageUrl: string | null = null;
   private _nextPageUrl: string | null = null;
   private _url: string;
-  constructor(simplePaginateUrl: string) {
-    this._url = simplePaginateUrl;
+  constructor(paginateUrl: string) {
+    this._url = paginateUrl;
   }
-  public async search(...args: any[]) {
-    const res = await api.common.simplePaginate.init<T>(this._url, ...args);
+  public async search(args: Dict<any>) {
+    const res = await api.common.paginate.init<T>(this._url, args);
     const { data, next_page_url, prev_page_url } = res.data;
     this._nextPageUrl = next_page_url;
     this._prevPageUrl = prev_page_url;
@@ -17,7 +18,7 @@ class SimplePaginate<T> {
 
   private async _page(url: string | null) {
     if (url === null) return [];
-    const res = await api.common.simplePaginate.page<T>(url);
+    const res = await api.common.paginate.page<T>(url);
     const { data, next_page_url, prev_page_url } = res.data;
     this._nextPageUrl = next_page_url;
     this._prevPageUrl = prev_page_url;
@@ -28,4 +29,4 @@ class SimplePaginate<T> {
   public next = () => this._page(this._nextPageUrl);
 }
 
-export default SimplePaginate;
+export default Paginate;

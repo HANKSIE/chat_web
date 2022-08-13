@@ -2,14 +2,14 @@ import { defineStore } from "pinia";
 import Message from "@/types/message";
 import endpoints from "@/config/endpoints";
 import ChattableUnit from "@/types/chattableUnit";
-import SimplePaginate from "@/utils/simplePaginate";
+import Paginate from "@/utils/paginate";
 import MessageRead from "@/types/messageRead";
 import api from "@/utils/api";
 interface State {
   unit: ChattableUnit | null;
   messages: Message[];
   messageReads: MessageRead[];
-  cursorPaginate?: SimplePaginate<Message>;
+  paginate?: Paginate<Message>;
 }
 
 const useChatroomStore = defineStore("chatroom", {
@@ -17,15 +17,15 @@ const useChatroomStore = defineStore("chatroom", {
     unit: null,
     messages: [],
     messageReads: [],
-    cursorPaginate: undefined,
+    paginate: undefined,
   }),
   actions: {
     async init(unit?: ChattableUnit) {
       this.messages = [];
       this.unit = unit || null;
-      this.cursorPaginate = unit
-        ? new SimplePaginate<Message>(
-            endpoints.socialite.group.message.cursorPaginate(unit!.group_id)
+      this.paginate = unit
+        ? new Paginate<Message>(
+            endpoints.socialite.group.message.paginate(unit!.group_id)
           )
         : undefined;
       this.messageReads = unit
@@ -41,10 +41,10 @@ const useChatroomStore = defineStore("chatroom", {
       this.messages.unshift(...messages.slice().reverse());
     },
     search(perPage: number) {
-      return this.cursorPaginate!.search(perPage);
+      return this.paginate!.search({ per_page: perPage });
     },
     loadTop() {
-      return this.cursorPaginate!.next();
+      return this.paginate!.next();
     },
     updateMessageReads(messageRead: MessageRead) {
       const index = this.messageReads.findIndex(
