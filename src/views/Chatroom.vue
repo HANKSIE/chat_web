@@ -28,22 +28,27 @@
             <q-spinner color="primary" name="dots" size="40px" />
           </div>
         </template>
-        <q-chat-message
-          v-for="message in chatroomStore.messages"
-          :key="message.id"
-          :name="message.user.name"
-          :text="[message.body]"
-          :sent="message.user.id !== auth.user.id"
-        >
-          <template #avatar>
-            <avatar
-              class="q-mx-sm"
-              size="45px"
-              :name="message.user.name"
-              :src="message.user.avatar_url"
-            />
-          </template>
-        </q-chat-message>
+        <template v-for="message in chatroomStore.messages" :key="message.id">
+          <q-chat-message
+            :name="message.user.name"
+            :text="[message.body]"
+            :sent="message.user.id !== auth.user.id"
+          >
+            <template #avatar>
+              <avatar
+                class="q-mx-sm"
+                size="45px"
+                :name="message.user.name"
+                :src="message.user.avatar_url"
+              />
+            </template>
+            <template #stamp>
+              <span class="text-grey-9">{{
+                messageReadsText(message.id)
+              }}</span>
+            </template>
+          </q-chat-message>
+        </template>
       </q-infinite-scroll>
     </q-scroll-area>
     <div class="row col flex-center">
@@ -123,6 +128,18 @@ export default {
       }
     };
 
+    const messageReadsText = (messageID: number) => {
+      const count = chatroomStore.messageReadCountExceptUser(
+        auth.user!.id,
+        messageID
+      );
+      if (chatroomStore.unit?.is_one_to_one) {
+        return count > 0 ? "已讀" : "";
+      } else {
+        return count > 1 ? `已讀 ${count - 1}` : "";
+      }
+    };
+
     return {
       chatroomStore,
       auth,
@@ -131,6 +148,7 @@ export default {
       scrollArea,
       loadTop,
       qInfiniteScroll,
+      messageReadsText,
     };
   },
 };

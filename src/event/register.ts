@@ -9,7 +9,7 @@ const listeners = [
   import("./listeners/echo/listenUserChannel"),
   import("./listeners/updateRecentFriend"),
   import("./listeners/markAsRead"),
-  import("./listeners/updateChatroomMessageReadList"),
+  import("./listeners/updateChatroomMessageReads"),
 ];
 
 export default async () => {

@@ -29,7 +29,9 @@ const useChatroomStore = defineStore("chatroom", {
           )
         : undefined;
       this.messageReads = unit
-        ? await api.socialite.group.readList(unit!.group_id)
+        ? await (
+            await api.socialite.group.messageReads(unit!.group_id)
+          ).data.message_reads
         : [];
     },
     push(...messages: Message[]) {
@@ -44,6 +46,23 @@ const useChatroomStore = defineStore("chatroom", {
     loadTop() {
       return this.cursorPaginate!.next();
     },
+    updateMessageReads(messageRead: MessageRead) {
+      const index = this.messageReads.findIndex(
+        (msr) => msr.user_id === messageRead.user_id
+      );
+      index === -1
+        ? this.messageReads.push(messageRead)
+        : this.messageReads.splice(index, 1, messageRead);
+    },
+  },
+  getters: {
+    messageReadCountExceptUser:
+      (state) => (userID: number, messageID: number) =>
+        state.messageReads.filter((messageRead) =>
+          messageRead.message_id == null || messageRead.user_id === userID
+            ? false
+            : messageRead.message_id >= messageID
+        ).length,
   },
 });
 

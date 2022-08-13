@@ -68,8 +68,10 @@ const api = {
         markAsRead: (groupID: number): Promise<AxiosResponse<void>> =>
           http.put(socialite.group.message.markAsRead(groupID)),
       },
-      readList: (groupID: number): Promise<MessageRead[]> =>
-        http.get(socialite.group.readList(groupID)),
+      messageReads: (
+        groupID: number
+      ): Promise<AxiosResponse<{ message_reads: MessageRead[] }>> =>
+        http.get(socialite.group.messageReads(groupID)),
     },
     friend: {
       request: {
