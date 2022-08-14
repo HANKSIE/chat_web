@@ -70,7 +70,7 @@ export default {
     };
 
     const search = async () => {
-      const data = await paginate.search({ type: "receive", per_page: 10 });
+      const data = await paginate.search({ type: "send", per_page: 10 });
       recipients.value = [...data];
       return data.length === 0;
     };

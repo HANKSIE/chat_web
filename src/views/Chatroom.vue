@@ -129,14 +129,13 @@ export default {
     };
 
     const messageReadsText = (messageID: number) => {
-      const count = chatroomStore.messageReadCountExceptUser(
-        auth.user!.id,
-        messageID
-      );
-      if (chatroomStore.unit?.is_one_to_one) {
-        return count > 0 ? "已讀" : "";
+      const count = chatroomStore.messageReadCount(messageID);
+      if (count > 2) {
+        return `已讀 ${count - 1}`;
+      } else if (count === 2) {
+        return "已讀";
       } else {
-        return count > 1 ? `已讀 ${count - 1}` : "";
+        return "";
       }
     };
 

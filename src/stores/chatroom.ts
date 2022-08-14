@@ -56,13 +56,12 @@ const useChatroomStore = defineStore("chatroom", {
     },
   },
   getters: {
-    messageReadCountExceptUser:
-      (state) => (userID: number, messageID: number) =>
-        state.messageReads.filter((messageRead) =>
-          messageRead.message_id == null || messageRead.user_id === userID
-            ? false
-            : messageRead.message_id >= messageID
-        ).length,
+    messageReadCount: (state) => (messageID: number) =>
+      state.messageReads.filter((messageRead) =>
+        messageRead.message_id == null
+          ? false
+          : messageRead.message_id >= messageID
+      ).length,
   },
 });
 
