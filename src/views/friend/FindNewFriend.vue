@@ -15,14 +15,14 @@
       <template #list-item-side="{ unit }">
         <q-btn
           flat
-          v-if="unit.status === UserStatus.STRANGER"
+          v-if="unit.state === UserState.STRANGER"
           color="primary"
           label="加好友"
           @click="sendFriendRequest(unit.id)"
         />
         <q-btn
           flat
-          v-if="unit.status === UserStatus.INVITE_ME"
+          v-if="unit.state === UserState.INVITE_ME"
           label="同意"
           color="primary"
           @click="acceptFriendRequest(unit.id)"
@@ -50,14 +50,14 @@ import ISearchableInfiniteScroll from "@/types/searchableInfiniteScroll";
 
 interface UserPaginateData {
   user: User;
-  status: number;
+  state: number;
 }
 
 interface FindNewFriendUnit extends Unit {
-  status: number;
+  state: number;
 }
 
-enum UserStatus {
+enum UserState {
   STRANGER = 0,
   ME,
   FRIEND,
@@ -82,8 +82,8 @@ export default {
           id,
           name,
           avatar_url,
-          itemCaption: ["", "我", "朋友", "", "邀請中"][val.status],
-          status: val.status,
+          itemCaption: ["", "我", "朋友", "", "邀請中"][val.state],
+          state: val.state,
         };
       })
     );
@@ -100,19 +100,19 @@ export default {
       const res = await api.socialite.friend.request.send(recipientID);
       const { be_friend, group_id } = res.data;
       if (be_friend) {
-        userData.value.find((d) => d.user.id === recipientID)!.status =
-          UserStatus.FRIEND;
+        userData.value.find((d) => d.user.id === recipientID)!.state =
+          UserState.FRIEND;
         joinGroup(group_id!);
       } else {
-        userData.value.find((d) => d.user.id === recipientID)!.status =
-          UserStatus.INVITING;
+        userData.value.find((d) => d.user.id === recipientID)!.state =
+          UserState.INVITING;
       }
     };
 
     const acceptFriendRequest = async (senderID: number) => {
       const res = await api.socialite.friend.request.accept(senderID);
-      userData.value.find((d) => d.user.id === senderID)!.status =
-        UserStatus.FRIEND;
+      userData.value.find((d) => d.user.id === senderID)!.state =
+        UserState.FRIEND;
       joinGroup(res.data.group_id);
     };
 
@@ -138,7 +138,7 @@ export default {
       showProfile,
       sendFriendRequest,
       acceptFriendRequest,
-      UserStatus,
+      UserState,
       userData,
       search,
       next,
