@@ -67,7 +67,7 @@ const api = {
             body,
           }),
         markAsRead: (groupID: number): Promise<AxiosResponse<void>> =>
-          http.put(socialite.group.message.markAsRead(groupID)),
+          http.post(socialite.group.message.markAsRead(groupID)),
       },
       messageReads: (
         groupID: number
