@@ -1,5 +1,9 @@
 import http from "@/utils/http";
-import { BroadcastAuthResponse, LoginResponse } from "@/types/responses/auth";
+import {
+  BroadcastAuthResponse,
+  SendForgotPasswordResetResponse,
+  LoginResponse,
+} from "@/types/responses/auth";
 import { AxiosResponse } from "axios";
 import endpoints from "@/config/endpoints";
 import Paginate from "@/types/paginate";
@@ -45,6 +49,18 @@ const api = {
         socket_id: socketID,
         channel_name: channelName,
       }),
+    sendPasswordResetLink: (
+      email: string
+    ): Promise<AxiosResponse<SendForgotPasswordResetResponse>> =>
+      http.post(auth.sendPasswordResetLink, { email }),
+
+    resetPassword: (payload: {
+      email: string;
+      password: string;
+      password_confirmation: string;
+      token: string;
+    }): Promise<AxiosResponse<SendForgotPasswordResetResponse>> =>
+      http.post(auth.resetPassword, payload),
   },
   socialite: {
     group: {

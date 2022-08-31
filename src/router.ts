@@ -2,6 +2,8 @@ import Chatroom from "@/views/Chatroom.vue";
 import Dashboard from "@/views/layouts/Dashboard.vue";
 import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
+import ForgotPassword from "@/views/ForgotPassword.vue";
+import ResetPassword from "@/views/ResetPassword.vue";
 import NotFound from "@/views/NotFound.vue";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import useAuthStore from "./stores/auth";
@@ -23,6 +25,22 @@ const routes: RouteRecordRaw[] = [
       redirectWhenAuth: true,
     },
     component: Register,
+  },
+  {
+    path: "/forgot-password",
+    name: "forgot.password",
+    meta: {
+      redirectWhenAuth: true,
+    },
+    component: ForgotPassword,
+  },
+  {
+    path: "/reset-password/:token",
+    name: "reset.password",
+    meta: {
+      redirectWhenAuth: true,
+    },
+    component: ResetPassword,
   },
   {
     path: "/dashboard",

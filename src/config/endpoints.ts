@@ -5,6 +5,8 @@ export default {
     logout: "logout",
     user: "user",
     broadcast: "broadcasting/auth",
+    sendPasswordResetLink: "forgot-password",
+    resetPassword: "reset-password",
   },
   csrf: "sanctum/csrf-cookie",
   socialite: {

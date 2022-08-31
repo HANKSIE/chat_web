@@ -14,16 +14,34 @@
           </q-input>
         </q-card-section>
         <q-card-section>
-          <q-input filled v-model="password" label="密碼" type="password">
+          <q-input
+            bottom-slots
+            filled
+            v-model="password"
+            label="密碼"
+            type="password"
+          >
             <template v-slot:prepend>
               <q-icon name="lock" />
             </template>
+            <template v-slot:hint>
+              <div class="text-center">
+                <span
+                  class="cursor-pointer"
+                  @click="$router.push({ name: 'forgot.password' })"
+                >
+                  忘記密碼
+                </span>
+              </div>
+            </template>
           </q-input>
         </q-card-section>
+
         <q-card-section>
           <validation-error :errors="errors" />
         </q-card-section>
-        <q-card-actions class="row justify-center">
+
+        <q-card-actions align="center">
           <div class="col-3">
             <q-btn
               label="登入"
@@ -34,13 +52,13 @@
           </div>
         </q-card-actions>
         <q-separator class="q-mt-sm" />
-        <q-card-section class="row justify-center">
+        <q-card-actions align="center">
           <span
-            class="cursor-pointer"
+            class="cursor-pointer text-caption"
             @click="$router.push({ name: 'register' })"
-            >還沒註冊嗎?</span
+            >還沒註冊嗎? 點擊註冊</span
           >
-        </q-card-section>
+        </q-card-actions>
       </q-card>
     </q-form>
   </full-center>
