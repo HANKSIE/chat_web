@@ -29,7 +29,7 @@ export default {
         deny: "friends/request/deny",
         revoke: "friends/request/revoke",
       },
-      unfriend: "friends",
+      unfriend: "friends/unfriend",
       requests: {
         paginate: "friends/requests/search",
       },

@@ -23,7 +23,7 @@ http.interceptors.response.use(
   (response: AxiosResponse): AxiosResponse => response,
   (error: AxiosError): Promise<never> => {
     if (
-      error.response!.status === 401 &&
+      [401].includes(error.response!.status) &&
       !httpConfig.dontRedirects.includes(error.response!.config.url!)
     ) {
       httpConfig.unauthHandle();

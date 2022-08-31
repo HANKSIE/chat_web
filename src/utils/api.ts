@@ -103,12 +103,10 @@ const api = {
         deny: (sender_id: number): Promise<AxiosResponse<void>> =>
           http.post(socialite.friend.request.deny, { sender_id }),
         revoke: (recipient_id: number): Promise<AxiosResponse<void>> =>
-          http.delete(socialite.friend.request.revoke, {
-            data: { recipient_id },
-          }),
+          http.post(socialite.friend.request.revoke, { recipient_id }),
       },
       unfriend: (friend_id: number): Promise<AxiosResponse<void>> =>
-        http.delete(socialite.friend.unfriend, { data: { friend_id } }),
+        http.post(socialite.friend.unfriend, { friend_id }),
     },
   },
   common: {
