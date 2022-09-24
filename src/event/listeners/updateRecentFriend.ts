@@ -13,7 +13,7 @@ const listener: Listener = {
   handle: (message: Message) => {
     const chatroomStore = useChatroomStore();
     const is_current_chatroom = isCurrentChatroom(message.group_id);
-    const is_me = isMe(message.user.id);
+    const is_me = isMe(message.user?.id);
     if (message.group?.is_one_to_one) {
       const record = recentContactFriendStore.data.find(
         (data) => data.message.group_id === message.group_id

@@ -46,4 +46,5 @@ export const leaveGroup = (groupID: number) => {
 
 export const isCurrentChatroom = (groupID: number) =>
   useChatroomStore().unit?.group_id === groupID;
-export const isMe = (userID: number) => userID === useAuthStore().user?.id;
+export const isMe = (userID?: number) =>
+  userID === undefined ? false : userID === useAuthStore().user?.id;

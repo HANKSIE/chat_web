@@ -16,7 +16,7 @@
     </div>
   </template>
   <div v-else style="height: calc(100vh - 50px)" class="column">
-    <q-scroll-area ref="scrollArea" class="q-px-md col-10">
+    <q-scroll-area ref="scrollArea" class="q-pa-md col-10">
       <q-infinite-scroll
         ref="qInfiniteScroll"
         @load="loadTop"
@@ -29,25 +29,37 @@
           </div>
         </template>
         <template v-for="message in chatroomStore.messages" :key="message.id">
-          <q-chat-message
-            :name="message.user.name"
-            :text="[message.body]"
-            :sent="message.user.id !== auth.user.id"
-          >
-            <template #avatar>
-              <avatar
-                class="q-mx-sm"
-                size="45px"
-                :name="message.user.name"
-                :src="message.user.avatar_url"
-              />
-            </template>
-            <template #stamp>
-              <span class="text-grey-9">{{
-                messageReadsText(message.id)
-              }}</span>
-            </template>
-          </q-chat-message>
+          <template v-if="message.user">
+            <q-chat-message
+              :name="message.user.name"
+              :text="[message.body]"
+              :sent="message.user.id !== auth.user.id"
+            >
+              <template #avatar>
+                <avatar
+                  class="q-mx-sm"
+                  size="45px"
+                  :name="message.user.name"
+                  :src="message.user.avatar_url"
+                />
+              </template>
+              <template #stamp>
+                <span class="text-grey-9">{{
+                  messageReadsText(message.id)
+                }}</span>
+              </template>
+            </q-chat-message>
+          </template>
+          <template v-else>
+            <!-- 系統訊息 -->
+            <div class="row justify-center q-my-md">
+              <q-card dark bordered>
+                <q-card-section>
+                  {{ message.body }}
+                </q-card-section>
+              </q-card>
+            </div>
+          </template>
         </template>
       </q-infinite-scroll>
     </q-scroll-area>
@@ -130,10 +142,13 @@ export default {
 
     const messageReadsText = (messageID: number) => {
       const count = chatroomStore.messageReadCount(messageID);
-      if (count > 2) {
-        return `已讀 ${count - 1}`;
-      } else if (count === 2) {
-        return "已讀";
+      const message = chatroomStore.messages.find(
+        (message) => message.id === messageID
+      );
+      if (count > 1 && message?.user?.id === auth.user?.id) {
+        return `已讀${
+          chatroomStore.unit?.is_one_to_one ? "" : ` ${count - 1}`
+        }`;
       } else {
         return "";
       }
