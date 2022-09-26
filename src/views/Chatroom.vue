@@ -44,18 +44,22 @@
                 />
               </template>
               <template #stamp>
-                <span class="text-grey-9">{{
-                  messageReadsText(message.id)
-                }}</span>
+                <div class="text-grey-9">
+                  {{ messageReadsText(message.id) }}
+                  <span class="text-caption">
+                    {{ message.created_at }}
+                  </span>
+                </div>
               </template>
             </q-chat-message>
           </template>
           <template v-else>
             <!-- 系統訊息 -->
             <div class="row justify-center q-my-md">
-              <q-card dark bordered>
-                <q-card-section>
-                  {{ message.body }}
+              <q-card dark bordered class="q-px-md">
+                <q-card-section class="column items-center">
+                  <span>{{ message.created_at }}</span>
+                  <span>{{ message.body }}</span>
                 </q-card-section>
               </q-card>
             </div>
