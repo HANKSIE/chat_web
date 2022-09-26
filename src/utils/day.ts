@@ -5,7 +5,7 @@ dayjs.locale("zh-tw");
 dayjs.extend(relativeTime);
 
 export default class Day {
-  public static relative(date: string) {
+  public static relativeTime(date: string) {
     return dayjs(date).fromNow();
   }
 }

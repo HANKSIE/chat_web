@@ -47,7 +47,7 @@
                 <div class="text-grey-9">
                   {{ messageReadsText(message.id) }}
                   <span class="text-caption">
-                    {{ relativeDate(message.created_at) }}
+                    {{ relativeTime(message.created_at) }}
                   </span>
                 </div>
               </template>
@@ -58,7 +58,7 @@
             <div class="row justify-center q-my-md">
               <q-card dark bordered class="q-px-md">
                 <q-card-section class="column items-center">
-                  <span>{{ relativeDate(message.created_at) }}</span>
+                  <span>{{ relativeTime(message.created_at) }}</span>
                   <span>{{ message.body }}</span>
                 </q-card-section>
               </q-card>
@@ -168,7 +168,7 @@ export default {
       loadTop,
       qInfiniteScroll,
       messageReadsText,
-      relativeDate: Day.relative,
+      relativeTime: Day.relativeTime,
     };
   },
 };

@@ -33,6 +33,7 @@ import { useQuasar } from "quasar";
 import UnitProfileDialog from "@/components/UnitProfileDialog.vue";
 import SearchableInfiniteScroll from "@/components/SearchableInfiniteScroll.vue";
 import { switchChatroom } from "@/utils/socialite";
+import Day from "@/utils/day";
 
 interface ChattableUnitWithUnread extends ChattableUnit {
   unread: number;
@@ -58,7 +59,7 @@ export default {
           avatar_url,
           group_id: message.group!.id,
           itemCaption: message.body,
-          sideTopCaption: message.created_at,
+          sideTopCaption: Day.relativeTime(message.created_at),
           unread: data.unread,
           is_one_to_one: true,
         };
