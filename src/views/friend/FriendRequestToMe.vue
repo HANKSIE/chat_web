@@ -68,9 +68,13 @@ export default {
       });
 
     const accept = async (senderID: number) => {
-      const res = await api.socialite.friend.request.accept(senderID);
+      try {
+        const res = await api.socialite.friend.request.accept(senderID);
+        joinGroup(res.data.group_id);
+      } catch (err) {
+        console.error(err);
+      }
       senders.value = senders.value.filter((user) => user.id !== senderID);
-      joinGroup(res.data.group_id);
     };
 
     const deny = async (senderID: number) => {
