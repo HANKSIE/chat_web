@@ -10,6 +10,7 @@ const listeners = [
   import("./listeners/updateRecentFriend"),
   import("./listeners/markAsRead"),
   import("./listeners/updateChatroomMessageReads"),
+  import("./listeners/notifyUnreadMessage"),
 ];
 
 export default async () => {
