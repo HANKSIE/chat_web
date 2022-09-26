@@ -1,19 +1,22 @@
 import endpoints from "@/config/endpoints";
-import httpConfig from "@/config/http";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import Cookie from "js-cookie";
+import EchoManager from "./echoManager";
+import env from "./env";
+import EventManager from "./eventManager";
 
-const http = axios.create(httpConfig.requestConfig);
+const http = axios.create({
+  baseURL: env("VITE_BACKEND_URL"),
+  withCredentials: true,
+});
 
 http.interceptors.request.use(
   async (config: AxiosRequestConfig) => {
-    if (
-      config.method !== "get" &&
-      Cookie.get(httpConfig.csrfTokenName) === undefined
-    )
+    if (config.method !== "get" && Cookie.get("XSRF-TOKEN") === undefined)
       await http.get(endpoints.csrf);
 
-    httpConfig.interceptors.request(config);
+    if (EchoManager.echo)
+      config.headers!["X-Socket-ID"] = EchoManager.echo.socketId();
     return config;
   },
   (err): Promise<never> => Promise.reject(err)
@@ -24,9 +27,9 @@ http.interceptors.response.use(
   (error: AxiosError): Promise<never> => {
     if (
       [401].includes(error.response!.status) &&
-      !httpConfig.dontRedirects.includes(error.response!.config.url!)
+      ![endpoints.auth.user].includes(error.response!.config.url!)
     ) {
-      httpConfig.unauthHandle();
+      EventManager.dispatch(EventManager.EventType.LOGOUT);
     }
     return Promise.reject(error);
   }
